@@ -1,0 +1,23 @@
+[package]
+name = 'greeting'
+version = '1.0.0'
+upgrade_policy = "compatible"
+
+# value of tahlil should be the same as .aptos/config.yaml file "account" value
+[addresses]
+tahlil='8cb79e2dc71de6cf9caa20ff77351b516f1c77ed74f8c744ce1158adc71e3410'
+Std = "0x1"
+aptos_std = "0x1"
+aptos_framework = "0x1"
+aptos_token = "0x3"
+aptos_token_objects = "0x4"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dependencies.AptosTokenObjects]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-token-objects"
