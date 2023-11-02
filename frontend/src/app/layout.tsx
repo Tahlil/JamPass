@@ -12,7 +12,7 @@ const kongtext = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Boilerplate",
+  title: "JamPass",
   description: "JamPass app",
 };
 
