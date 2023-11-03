@@ -1,0 +1,46 @@
+{
+    "Tickets": [
+      {
+        "Ticket Type": "General Admission",
+        "Price": 50.00,
+        "Available Quantity": 500,
+        "Description": "Standard admission to the event",
+        "Discounts": {
+          "Early Bird": 10.00,
+          "Group (10+ people)": 15.00
+        },
+        "Sales Period": {
+          "Start Date": "2023-10-01",
+          "End Date": "2023-11-30"
+        }
+      },
+      {
+        "Ticket Type": "VIP Pass",
+        "Price": 150.00,
+        "Available Quantity": 100,
+        "Description": "VIP access with exclusive perks",
+        "Discounts": {
+          "Early Bird": 20.00,
+          "Group (5+ people)": 30.00
+        },
+        "Sales Period": {
+          "Start Date": "2023-10-01",
+          "End Date": "2023-11-30"
+        }
+      },
+      {
+        "Ticket Type": "Student Pass",
+        "Price": 30.00,
+        "Available Quantity": 300,
+        "Description": "Valid student ID required",
+        "Discounts": {
+          "Early Bird": 5.00
+        },
+        "Sales Period": {
+          "Start Date": "2023-10-01",
+          "End Date": "2023-11-30"
+        }
+      }
+    ]
+  }
+  
