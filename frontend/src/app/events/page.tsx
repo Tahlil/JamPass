@@ -9,15 +9,14 @@ import Navigation from "@/components/navigation";
 export function Events() {
   const { connected } = useWallet();
 
-  if (connected) return (
-    <FixedSizeWrapper>
-
-<Header/>
-     <Navigation />
-     <Connected element="home" />
-    </FixedSizeWrapper>
-   
-  )
+  if (connected)
+    return (
+      <FixedSizeWrapper>
+        <Header />
+        <Navigation />
+        <Connected element="home" />
+      </FixedSizeWrapper>
+    );
 
   return <NotConnected />;
 }
