@@ -3,7 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
+import { Events } from "@/components/events";
 import { AptosClient } from "aptos";
+
 
 const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 
@@ -195,6 +197,10 @@ export function Connected(props: { element: "home" | "event" | "ticket"}) {
          }
        </div>
       }
+
+        {element === "event" &&
+          <Events/>
+        }
        
       </div>
     </div>
