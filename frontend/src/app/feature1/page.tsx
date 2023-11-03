@@ -12,7 +12,7 @@ export function Feature1() {
     <>
     <div className="p-9"></div>
      <Navigation />
-     <Connected />
+     <Connected element="home" />
     </>
    
   )

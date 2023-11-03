@@ -7,8 +7,10 @@ import { AptosClient } from "aptos";
 
 const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 
-export function Connected() {
+
+export function Connected(props: { element: "home" | "event" | "ticket"}) {
   const [address, setAddress] = useState<String>("");
+  const element = props.element;
   const [accountIsWhitelisted, setAccountIsWhitelisted] = useState(false);
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
@@ -103,6 +105,20 @@ export function Connected() {
             {account?.address}
           </p>
         </p>
+        <div className="flex m-7">
+            <div className="p-10 bg-gradient-to-r from-purple-100">
+              <h1 className="text-2xl">
+                Account Type:{" "}
+                <span className="text-purple-600">
+                  {NEXT_PUBLIC_CONTRACT_ADDRESS === account?.address
+                    ? "Admin"
+                    : accountIsWhitelisted
+                    ? "Whitelisted Event Manager"
+                    : "Customer"}{" "}
+                </span>{" "}
+              </h1>
+            </div>
+          </div>
         <div>
           {NEXT_PUBLIC_CONTRACT_ADDRESS === account?.address && (
             <div>
@@ -129,20 +145,7 @@ export function Connected() {
             </div>
           )}
 
-          <div className="flex">
-            <div className="p-10 bg-gradient-to-r from-purple-100">
-              <h1 className="text-2xl">
-                Account Type:{" "}
-                <span className="text-purple-600">
-                  {NEXT_PUBLIC_CONTRACT_ADDRESS === account?.address
-                    ? "Admin"
-                    : accountIsWhitelisted
-                    ? "Whitelisted Event Manager"
-                    : "Customer"}{" "}
-                </span>{" "}
-              </h1>
-            </div>
-          </div>
+         
           {accountIsWhitelisted &&
             NEXT_PUBLIC_CONTRACT_ADDRESS !== account?.address && (
               <div className="flex items-center justify-center m-2">

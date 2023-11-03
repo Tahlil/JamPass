@@ -11,7 +11,7 @@ export function Body() {
   if (connected) return (
     <>
      <Navigation />
-     <Connected />
+     <Connected element="event"/>
     </>
    
   )

@@ -33,12 +33,12 @@ const Navbar = ({ toggle }: { toggle: () => void }) => {
               </li>
               <li className="inline-flex items-center justify-center px-4 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
                 <Link href="/feature1" className="no-underline hover:text-yellow-400">
-                  <p>Feature 1</p>
+                  <p>Events</p>
                 </Link>
               </li>
               <li className="inline-flex items-center justify-center px-4 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
                 <Link href="/services" className="no-underline hover:text-yellow-400">
-                  <p>Feature 2</p>
+                  <p>My Tickets</p>
                 </Link>
               </li>
               <li className="inline-flex items-center justify-center px-4 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
