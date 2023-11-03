@@ -8,13 +8,11 @@ import { AptosClient } from "aptos";
 const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 
 export function Connected() {
-
   const [address, setAddress] = useState<String>("");
   const [accountIsWhitelisted, setAccountIsWhitelisted] = useState(false);
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
   const { account, network, signAndSubmitTransaction } = useWallet();
-  
 
   const whitelistAddress = async () => {
     if (!account?.address) return;
@@ -26,16 +24,16 @@ export function Connected() {
       type_arguments: [],
       arguments: [address],
     };
- 
+
     try {
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
-      console.log({response})
+      console.log({ response });
       // wait for transaction
       await client.waitForTransaction(response.hash);
     } catch (error) {
       console.log("error", error);
-      console.log({error});
+      console.log({ error });
     } finally {
       setTransactionInProgress(false);
     }
@@ -49,18 +47,27 @@ export function Connected() {
       type: "entry_function_payload",
       function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
       type_arguments: [],
-      arguments: ["eventCollection", "Test desc", 11, "name", "https://images.lumacdn.com/cdn-cgi/image", "as", "df", "jk"],
+      arguments: [
+        "eventCollection",
+        "Test desc",
+        11,
+        "name",
+        "https://images.lumacdn.com/cdn-cgi/image",
+        "as",
+        "df",
+        "jk",
+      ],
     };
- 
+
     try {
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
-      console.log({response})
+      console.log({ response });
       // wait for transaction
       await client.waitForTransaction(response.hash);
     } catch (error) {
       console.log("error", error);
-      console.log({error});
+      console.log({ error });
     } finally {
       setTransactionInProgress(false);
     }
@@ -82,52 +89,86 @@ export function Connected() {
           </p>
         </p>
         <div>
-        <div className="flex rounded-md shadow-sm m-11">
-            <span className="px-4 inline-flex items-center min-w-fit rounded-l-md border border-r-0 border-gray-200 bg-gray-50 text-sm text-gray-500 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-400">
-              Address to Whitelist
-            </span>
-            <input
-              type="text"
-              onChange={(event) => setAddress(event.target.value + "")}
-              className="py-2 px-12 pr-11 block w-full border-gray-200 shadow-sm rounded-r-md text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
-              placeholder="public address"
-            />
-          </div>  
+          {NEXT_PUBLIC_CONTRACT_ADDRESS === account?.address && (
+            <div>
+              <div className="flex rounded-md shadow-sm m-11">
+                <span className="px-4 inline-flex items-center min-w-fit rounded-l-md border border-r-0 border-gray-200 bg-gray-50 text-sm text-gray-500 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-400">
+                  Address to Whitelist
+                </span>
+                <input
+                  type="text"
+                  onChange={(event) => setAddress(event.target.value + "")}
+                  className="py-2 px-12 pr-11 block w-full border-gray-200 shadow-sm rounded-r-md text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                  placeholder="public address"
+                />
+              </div>
 
-          <div className="flex items-center justify-center">
-            <button
-              onClick={whitelistAddress}
-              className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-            >
-              Whitelist Address 📝
-            </button>
+              <div className="flex items-center justify-center">
+                <button
+                  onClick={whitelistAddress}
+                  className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                >
+                  Whitelist Address to create event 📝
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex">
+            <div className="p-10 bg-gradient-to-r from-purple-100">
+              <h1 className="text-2xl">
+                Account Type:{" "}
+                <span className="text-purple-600">
+                  {NEXT_PUBLIC_CONTRACT_ADDRESS === account?.address
+                    ? "Admin"
+                    : accountIsWhitelisted
+                    ? "Whitelisted Event Manager"
+                    : "Customer"}{" "}
+                </span>{" "}
+              </h1>
+            </div>
           </div>
+          {accountIsWhitelisted &&
+            NEXT_PUBLIC_CONTRACT_ADDRESS !== account?.address && (
+              <div className="flex items-center justify-center m-2">
+                <button
+                  onClick={createEvent}
+                  className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                >
+                  Create Event 📢
+                </button>
+              </div>
+            )}
 
-          <div className='flex'>
-        <div className='p-10 bg-gradient-to-r from-purple-100'>
-                 <h1 className="text-2xl">Account Type: <span className="text-purple-600">{
-                 NEXT_PUBLIC_CONTRACT_ADDRESS === account?.address ? "Admin" : (accountIsWhitelisted ? "Whitelisted Event Manager" : "Customer")
-                 } </span>  </h1>
+          {!accountIsWhitelisted &&
+            NEXT_PUBLIC_CONTRACT_ADDRESS !== account?.address && (
+              <div className="font-extrabold text-3xl md:text-4xl [text-wrap:balance] bg-clip-text text-transparent bg-gradient-to-r from-slate-500/60 to-50% to-slate-500 p-11">
+                Secure your ticket in a heartbeat for
+                <span className="text-indigo-500 inline-flex flex-col h-[calc(theme(fontSize.3xl)*theme(lineHeight.tight))] md:h-[calc(theme(fontSize.4xl)*theme(lineHeight.tight))] overflow-hidden">
+                  <ul className="block animate-text-slide-7 text-center leading-tight [&_li]:block">
+                    <li>Concerts</li>
+                    <li>Sports Games</li>
+                    <li>Cultural Festivals</li>
+                    <li>Conferences</li>
+                    <li>Theater Shows</li>
+                    <li>Movie Premieres</li>
+                    <li>Art Exhibitions</li>
+                    <li>Comedy Nights</li>
+                    <li>Workshops</li>
+                    <li>Food Festivals</li>
+                    <li>Tech Conferences</li>
+                    <li>Outdoor Adventures</li>
+                    <li>Fundraising Galas</li>
+                    <li>Fashion Shows</li>
+                    <li>Educational Seminars</li>
+                    <li aria-hidden="true">Finance</li>
+                  </ul>
+                </span>
+              </div>
+            )}
 
+          <div></div>
         </div>
-    </div>
-
-    <div className="flex items-center justify-center m-2">
-            <button
-              onClick={createEvent}
-              className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-            >
-              Create Event 📢
-            </button>
-          </div>
-
-
-          <div>
-         
-</div>
-        
-        </div>
-
       </div>
     </div>
   );
