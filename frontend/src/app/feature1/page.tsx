@@ -10,6 +10,7 @@ export function Feature1() {
 
   if (connected) return (
     <>
+    
     <div className="p-9"></div>
      <Navigation />
      <Connected element="home" />

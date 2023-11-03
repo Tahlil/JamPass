@@ -11,7 +11,7 @@ const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 export function Connected(props: { element: "home" | "event" | "ticket"}) {
   const [address, setAddress] = useState<String>("");
   const element = props.element;
-  const [accountIsWhitelisted, setAccountIsWhitelisted] = useState(false);
+  const [accountIsWhitelisted, setAccountIsWhitelisted] = useState(null);
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
   const { account, network, signAndSubmitTransaction } = useWallet();
@@ -145,8 +145,12 @@ export function Connected(props: { element: "home" | "event" | "ticket"}) {
             </div>
           )}
 
-         
-          {accountIsWhitelisted &&
+          {accountIsWhitelisted === null ? 
+            ""
+          : 
+          (
+            <div>
+              {accountIsWhitelisted &&
             NEXT_PUBLIC_CONTRACT_ADDRESS !== account?.address && (
               <div className="flex items-center justify-center m-2">
                 <button
@@ -184,6 +188,11 @@ export function Connected(props: { element: "home" | "event" | "ticket"}) {
                 </span>
               </div>
             )}
+            </div>
+          )
+          }
+         
+          
 
           <div></div>
         </div>
