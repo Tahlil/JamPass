@@ -39,6 +39,21 @@ export function Connected() {
     }
   };
 
+  const fetchValue = useCallback(async () => {
+    if (!account?.address) return;
+    const value = await client.getAccountResources(
+      NEXT_PUBLIC_CONTRACT_ADDRESS
+    );
+    console.log({ value });
+    setAccountIsWhitelisted(value[0].data.whitelist.inline_vec.includes(account?.address+""))
+  }, [account?.address]);
+
+  useEffect(() => {
+    if (!account?.address || !network) return;
+
+    fetchValue();
+  }, [account?.address, fetchValue, network]);
+
   const createEvent = async () => {
     if (!account?.address) return;
     setTransactionInProgress(true);
@@ -160,8 +175,8 @@ export function Connected() {
                     <li>Outdoor Adventures</li>
                     <li>Fundraising Galas</li>
                     <li>Fashion Shows</li>
-                    <li>Educational Seminars</li>
-                    <li aria-hidden="true">Finance</li>
+                    <li>Charity Event</li>
+                    <li aria-hidden="true">Educational Seminars</li>
                   </ul>
                 </span>
               </div>
