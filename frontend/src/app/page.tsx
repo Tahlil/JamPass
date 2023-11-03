@@ -7,7 +7,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 export const FixedSizeWrapper = ({ children }: PropsWithChildren) => {
   const fixedStyle = {
     width: "1200px",
-    height: "800px",
+    // height: "800px",
     border: "6px solid",
     margin: "auto",
   };
@@ -19,7 +19,7 @@ export const FixedSizeWrapper = ({ children }: PropsWithChildren) => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        marginTop: "1.5rem"
+        marginTop: "5rem"
       }}
     >
       <div style={fixedStyle}>{children}</div>
