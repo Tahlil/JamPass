@@ -27,6 +27,7 @@ export function Events() {
                  <div className="text-lg text-white font-light">
                  {event.price}
                  </div>
+                 
                  <button className="rounded-full bg-purple-900 text-white hover:bg-white hover:text-purple-900 hover:shadow-xl focus:outline-none w-10 h-10 flex ml-auto transition duration-300">
                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="stroke-current m-auto">
                      <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -34,6 +35,12 @@ export function Events() {
                    </svg>
                  </button>
                </div>
+               <div className="text-red-200 font-light m-2 h-[130px]">
+                📍 <h5>{event.location}</h5>
+                 </div>
+                 <div className="text-amber-500 font-light">
+                🕰 {event.datetime}
+                 </div>
              </div>
            </div>
          </div>
