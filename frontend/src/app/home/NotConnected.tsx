@@ -6,7 +6,7 @@ import { useTypingEffect } from "@/utils/useTypingEffect";
 export function NotConnected() {
  
   const text = useTypingEffect(
-    `Welcome to Aptos Boilerplate COde! Make sure you have a wallet extension installed. Once you connect your wallet, you'll be able to interact with your custom contract.`
+    `Jampass operates as an innovative event ticketing platform designed to provide seamless access to a wide range of events and activities. Users can browse, select, and purchase tickets for various events, from concerts and sports games to cultural festivals. Please connect to wallet to start the app`
   );
 
 
