@@ -19,6 +19,7 @@ export const FixedSizeWrapper = ({ children }: PropsWithChildren) => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        marginTop: "1.5rem"
       }}
     >
       <div style={fixedStyle}>{children}</div>
