@@ -11,10 +11,9 @@ export function Events() {
 
   if (connected) return (
     <FixedSizeWrapper>
-
-<Header/>
+     <Header/>
      <Navigation />
-     <Connected element="home" />
+     <Connected element="ticket" />
     </FixedSizeWrapper>
    
   )
