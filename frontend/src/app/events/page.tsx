@@ -14,7 +14,7 @@ export function Events() {
       <FixedSizeWrapper>
         <Header />
         <Navigation />
-        <Connected element="home" />
+        <Connected element="event" />
       </FixedSizeWrapper>
     );
 
