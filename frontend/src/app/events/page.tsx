@@ -2,23 +2,24 @@
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { Connected } from "../home/Connected";
+import { Header, FixedSizeWrapper } from "../page";
 import { NotConnected } from "../home/NotConnected";
 import Navigation from "@/components/navigation";
 
-export function Feature1() {
+export function Events() {
   const { connected } = useWallet();
 
   if (connected) return (
-    <>
-    
-    <div className="p-9"></div>
+    <FixedSizeWrapper>
+
+     <Header></Header>
      <Navigation />
      <Connected element="home" />
-    </>
+    </FixedSizeWrapper>
    
   )
 
   return <NotConnected />;
 }
 
-export default Feature1;
+export default Events;

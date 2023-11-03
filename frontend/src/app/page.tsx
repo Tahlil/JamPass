@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 
-const FixedSizeWrapper = ({ children }: PropsWithChildren) => {
+export const FixedSizeWrapper = ({ children }: PropsWithChildren) => {
   const fixedStyle = {
     width: "1200px",
     height: "800px",
@@ -48,7 +48,7 @@ export function Header() {
   );
 }
 
-export const WalletButtons = dynamic(
+const WalletButtons = dynamic(
   async () => {
     const { WalletButtons } = await import("@/components/WalletButtons");
     return { default: WalletButtons };
