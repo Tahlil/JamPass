@@ -48,7 +48,7 @@ export function Connected(props: { element: "home" | "event" | "ticket"}) {
     const value = await client.getAccountResources(
       NEXT_PUBLIC_CONTRACT_ADDRESS
     );
-    console.log({ value });
+    if (!value[0].data.whitelist) return;
     setAccountIsWhitelisted(value[0].data.whitelist.inline_vec.includes(account?.address+""))
   }, [account?.address]);
 

@@ -5,7 +5,7 @@ upgrade_policy = "compatible"
 
 # value of tahlil should be the same as .aptos/config.yaml file "account" value
 [addresses]
-tahlil='8cb79e2dc71de6cf9caa20ff77351b516f1c77ed74f8c744ce1158adc71e3410'
+tahlil='aeb489f1b55ebb7b00926879ea2dceaf7bac94556649b83e1dd1a2bf41c017c8'
 Std = "0x1"
 aptos_std = "0x1"
 aptos_framework = "0x1"
