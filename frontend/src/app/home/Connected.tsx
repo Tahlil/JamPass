@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
 import { Events } from "@/components/events";
+import { CreateEventForm } from "@/components/CreateEventForm";
 import { AptosClient } from "aptos";
 import Link from "next/link";
 
@@ -204,6 +205,10 @@ export function Connected(props: { element: "home" | "event" | "ticket" | "creat
 
         {element === "event" &&
           <Events/>
+        }
+
+        {element === "create" &&
+          <CreateEventForm/>
         }
        
       </div>
