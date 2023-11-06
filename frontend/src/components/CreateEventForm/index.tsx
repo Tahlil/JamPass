@@ -1,3 +1,4 @@
+import { Datepicker } from 'flowbite-react';
 export function CreateEventForm() {
   return (
     <div>
@@ -14,7 +15,7 @@ export function CreateEventForm() {
         />
 
         <form action="" className="mx-auto rounded">
-          <div className="shadow w-[115%]">
+          <div className="shadow w-[115%] p-3">
             <div className="flex flex-row items-center bg-purple-400 rounded-b-lg border-purple-500 mb-10">
               <label
                 htmlFor="name"
@@ -168,6 +169,11 @@ export function CreateEventForm() {
                 placeholder="Event image link"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
+            </div>
+
+            <div className='mb-10 flex justify-start'>
+                <label htmlFor="" className='mr-3'>Event Date: </label>
+            <Datepicker minDate={new Date()}/>
             </div>
           </div>
           <button className="bg-pink-400 hover:bg-purple-700  block w-1/2 rounded py-4 text-white font-bold shadow">
