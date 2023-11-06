@@ -1,4 +1,5 @@
 import EventData from "../../data/events.json";
+import Link from "next/link";
 
 export function Events() {
     console.log(EventData)
@@ -11,7 +12,9 @@ export function Events() {
       </h1>
     </div>
     {EventData.map(event => 
+        //   <Link href={"/event-details"}>
            <div className="w-full md:w-1/2 lg:w-1/4 pl-5 pr-5 mb-5 lg:pl-2 lg:pr-2">
+            <Link href={"/event-details"}>
            <div className="bg-white rounded-lg m-h-64 p-2 transform hover:translate-y-2 hover:shadow-xl transition duration-300">
              <figure className="mb-2">
                <img src={event.image} alt="" className="h-64 ml-auto mr-auto" />
@@ -43,6 +46,7 @@ export function Events() {
                  </div>
              </div>
            </div>
+           </Link>
          </div>
         )}
   </div>
