@@ -12,7 +12,7 @@ import Link from "next/link";
 const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 
 
-export function Connected(props: { element: "home" | "event" | "ticket" | "create"}) {
+export function Connected(props: { element: "home" | "event" | "ticket" | "create" | "details"}) {
   const [address, setAddress] = useState<String>("");
   const element = props.element;
   const [accountIsWhitelisted, setAccountIsWhitelisted] = useState(null);
