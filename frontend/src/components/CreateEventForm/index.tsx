@@ -1,4 +1,5 @@
 import { Datepicker } from 'flowbite-react';
+import Link from 'next/link';
 export function CreateEventForm() {
   return (
     <div>
@@ -200,9 +201,11 @@ export function CreateEventForm() {
             <Datepicker minDate={new Date()}/>
             </div>
           </div>
+          <Link href={"/"}>
           <button className="mt-7 bg-pink-400 hover:bg-purple-700  block w-1/2 rounded py-4 text-white font-bold shadow">
             Create Event
           </button>
+          </Link>
         </form>
       </div>
     </div>
