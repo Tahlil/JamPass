@@ -177,6 +177,7 @@ export function CreateEventForm() {
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
             </div>
+
             <div className="flex flex-row items-center bg-purple-400  rounded-b-lg border-purple-500 mb-10">
               <label
                 htmlFor="phone"
@@ -189,6 +190,22 @@ export function CreateEventForm() {
                 name="phone"
                 id="phone"
                 placeholder="Event phone number"
+                className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
+              />
+            </div>
+
+            <div className="flex flex-row items-center bg-purple-400  rounded-b-lg border-purple-500 mb-10">
+              <label
+                htmlFor="price"
+                className="w-[30%] text-right p-4 mr-8 text-purple-200"
+              >
+                Price In USD
+              </label>
+              <input
+                type="number"
+                name="price"
+                id="price"
+                placeholder="$$.$$"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
             </div>
