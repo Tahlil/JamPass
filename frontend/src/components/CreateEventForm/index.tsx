@@ -15,10 +15,40 @@ export function CreateEventForm() {
 
             
 
-            <div className="flex flex-row items-center bg-purple-400  rounded-b-lg border-purple-500 mb-10">
+            <div className="flex flex-row items-center bg-purple-400 rounded-b-lg border-purple-500 mb-10">
               <label htmlFor="name" className="w-[30%] text-right p-4 mr-8 text-purple-200">Name</label>
               <input type="text" name="name" id="name" placeholder="Event name" className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"/>
             </div>
+
+            <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
+        <div className="box__title bg-purple-400 text-purple-200 px-3 py-2 border-b"><h3 className="text-sm text-grey-darker font-medium">Description</h3></div>
+        <textarea placeholder="Event description" className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md" name="description"></textarea>
+      </div>
+
+      <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
+        <div className="box__title bg-purple-400 text-purple-200 px-3 py-2 border-b"><h3 className="text-sm text-grey-darker font-medium">Agendas</h3></div>
+        <textarea placeholder="Event agendas" className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md" name="agendas"></textarea>
+      </div>
+
+      <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
+        <div className="box__title bg-purple-400 text-purple-200 px-3 py-2 border-b"><h3 className="text-sm text-grey-darker font-medium">Speakers</h3></div>
+        <textarea placeholder="Event speakers" className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md" name="speakers"></textarea>
+      </div>
+
+      <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
+        <div className="box__title bg-purple-400 text-purple-200 px-3 py-2 border-b"><h3 className="text-sm text-grey-darker font-medium">Breaks</h3></div>
+        <textarea placeholder="Event breaks" className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md" name="breaks"></textarea>
+      </div>
+
+      <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
+        <div className="box__title bg-purple-400 text-purple-200 px-3 py-2 border-b"><h3 className="text-sm text-grey-darker font-medium">Registration</h3></div>
+        <textarea placeholder="Enter registration process" className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md" name="registration"></textarea>
+      </div>
+
+      <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
+        <div className="box__title bg-purple-400 text-purple-200 px-3 py-2 border-b"><h3 className="text-sm text-grey-darker font-medium">Emergency</h3></div>
+        <textarea placeholder="Enter detailed protocol on emergency" className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md" name="emergency"></textarea>
+      </div>
 
             <div className="flex flex-row items-center bg-purple-400  rounded-b-lg border-purple-500 mb-10">
               <label htmlFor="location" className="w-[30%] text-right p-4 mr-8 text-purple-200">Location</label>
