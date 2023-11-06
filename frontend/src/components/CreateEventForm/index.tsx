@@ -6,13 +6,37 @@ export function CreateEventForm() {
         Create Event
       </h1>
 
-      <div className="bg-purple-200 p-3 flex items-center text-lg">
+      <div className="bg-purple-200 p-3 flex items-center align-top text-lg">
+        <div className='flex flex-col items-start'>
         <img
-          className="float-left"
-          width={"300px"}
-          height={"2500px"}
-          src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30"
+          className="py-3"
+          width={"350px"}
+          src="https://thumbs.dreamstime.com/b/vertical-shot-electronic-music-festival-electrifinity-bad-aibling-dj-dancing-crowd-vertical-shot-260429060.jpg"
         />
+        <img
+          className="py-3"
+          width={"350px"}
+          src="https://images.unsplash.com/photo-1509824227185-9c5a01ceba0d?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNvbmNlcnR8ZW58MHx8MHx8fDA%3D"
+        />
+        <img
+          className="py-3"
+          width={"350px"}
+          src="https://img.freepik.com/premium-photo/people-walking-large-room-with-lot-lights_524486-786.jpg?size=338&ext=jpg&ga=GA1.1.1826414947.1699056000&semt=ais"
+        />
+
+        <img
+          className="py-3"
+          width={"350px"}
+          src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNvbmZlcmVuY2V8ZW58MHx8MHx8fDA%3D"
+        />
+
+        <img
+          className="py-3"
+          width={"350px"}
+          src="https://media.istockphoto.com/id/1363169212/photo/girl-holds-tickets-boarding-passes-for-a-flight.jpg?s=612x612&w=0&k=20&c=sLpjtW-G0r8jQX9HNZf2ldnlS57xJgxAIIJYCtI_AiY="
+        />
+        </div>
+       
 
         <form action="" className="mx-auto rounded">
           <div className="shadow w-[115%] p-3">
@@ -176,7 +200,7 @@ export function CreateEventForm() {
             <Datepicker minDate={new Date()}/>
             </div>
           </div>
-          <button className="bg-pink-400 hover:bg-purple-700  block w-1/2 rounded py-4 text-white font-bold shadow">
+          <button className="mt-7 bg-pink-400 hover:bg-purple-700  block w-1/2 rounded py-4 text-white font-bold shadow">
             Create Event
           </button>
         </form>
