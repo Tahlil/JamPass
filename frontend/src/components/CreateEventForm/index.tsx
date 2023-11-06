@@ -133,6 +133,19 @@ export function CreateEventForm() {
               ></textarea>
             </div>
 
+            <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
+              <div className="box__title bg-purple-400 text-purple-200 px-3 py-2 border-b">
+                <h3 className="text-sm text-grey-darker font-medium">
+                  Rules
+                </h3>
+              </div>
+              <textarea
+                placeholder="Enter event rules"
+                className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
+                name="rules"
+              ></textarea>
+            </div>
+
             <div className="flex flex-row items-center bg-purple-400  rounded-b-lg border-purple-500 mb-10">
               <label
                 htmlFor="location"
