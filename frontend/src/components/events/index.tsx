@@ -2,18 +2,16 @@ import { useState } from "react";
 import EventData from "../../data/events.json";
 import { EventDetails } from "../EventDetails";
 
-export function Events() {
-  console.log(EventData);
+export function Events(props: { userType: string }) {
   const [allEventsSet, setAllEventsSet] = useState<Boolean>(true);
-  const [eventDetails, setEvent] = useState({});
+  const [eventDetails, setEvent] = useState<Event>();
   function goToEventDetails(event: any) {
     setEvent(event);
     setAllEventsSet(false);
   }
 
-function gotoEvent() {
+  function gotoEvent() {
     setAllEventsSet(true);
-
   }
 
   return (
@@ -89,10 +87,24 @@ function gotoEvent() {
           <div className="mb-5">
             <EventDetails {...eventDetails} />
           </div>
+          {props.userType === "customer" && (
+            <div className="mb-10">
+              <button
+                onClick={() => {
+                  gotoEvent();
+                }}
+                className="rounded-full bg-blue-900 text-white hover:bg-white hover:text-blue-900 hover:shadow-xl duration-300 p-3"
+              >
+                Buy Ticket 🎫
+              </button>
+            </div>
+          )}
 
           <div>
             <button
-              onClick={() => {gotoEvent()}}
+              onClick={() => {
+                gotoEvent();
+              }}
               className="rounded-full bg-purple-900 text-white hover:bg-white hover:text-purple-900 hover:shadow-xl duration-300 p-3"
             >
               GO To Events Page

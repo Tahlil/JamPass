@@ -204,11 +204,11 @@ export function Connected(props: { element: "home" | "event" | "ticket" | "creat
       }
 
         {element === "event" &&
-          <Events/>
+          <Events userType={(!accountIsWhitelisted && NEXT_PUBLIC_CONTRACT_ADDRESS !== account?.address) ? "customer" : "non-customer"}/>
         }
 
         {element === "create" &&
-          <CreateEventForm/>
+          <CreateEventForm />
         }
 
         
