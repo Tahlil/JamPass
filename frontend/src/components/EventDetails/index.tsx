@@ -18,12 +18,6 @@ export function EventDetails(eventProps: Event) {
             ))
         }
       </div>
-      {/* {
-        Object.keys(eventProps).map((e) => {
-            <EventProperty key={e} name={e}/>
-        })
-      } */}
-
     </div>
    
   );
