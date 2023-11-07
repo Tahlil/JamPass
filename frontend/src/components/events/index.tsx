@@ -89,14 +89,34 @@ export function Events(props: { userType: string }) {
           </div>
           {props.userType === "customer" && (
             <div className="mb-10">
-              <button
-                onClick={() => {
-                  gotoEvent();
+              <section>
+                <button
+                  type="button"
+                  className="nes-btn is-primary"
+                  onClick={() => {
+                    document.getElementById('dialog-rounded').showModal();
                 }}
-                className="rounded-full bg-blue-900 text-white hover:bg-white hover:text-blue-900 hover:shadow-xl duration-300 p-3"
-              >
-                Buy Ticket 🎫
-              </button>
+                >
+                  Buy Ticket 🎫
+                </button>
+                <dialog className="nes-dialog is-rounded" id="dialog-rounded">
+                  <form method="dialog">
+                    <p className="title p-3">Rounded dialog</p>
+                    <p>Event Name: {eventDetails?.name}</p>
+                    <menu className="dialog-menu p-3">
+                      <button className="nes-btn m-2">Cancel</button>
+                      <button
+                        onClick={() => {
+                          gotoEvent();
+                        }}
+                        className="nes-btn is-primary"
+                      >
+                        Confirm Buy Ticket 🎫
+                      </button>
+                    </menu>
+                  </form>
+                </dialog>
+              </section>
             </div>
           )}
 
