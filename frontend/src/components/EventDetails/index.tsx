@@ -5,7 +5,7 @@ export function EventDetails(props: any) {
   return (
     <div className="nes-container with-title">
       <p className="title">Event Details</p>
-      <EventProperty name= "Test Event"/>
+      <EventProperty key="" name= "Test Event"/>
 
     </div>
   );
