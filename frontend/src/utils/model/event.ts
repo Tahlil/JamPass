@@ -9,7 +9,7 @@ export type Event = {
     registration: String,
     contact: String,
     emergency: String,
-    image: String,
+    image?: String,
     price: String,
     transferrable: Boolean
 }
