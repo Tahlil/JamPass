@@ -1,7 +1,7 @@
 import Link from "next/link";
 import EventProperty from "./event-property"
-export function EventDetails(props: any) {
-  props = {name: "Test Event"}
+export function EventDetails(eventProps: any) {
+  console.log({eventProps})
   return (
     <div className="nes-container with-title">
       <p className="title">Event Details</p>

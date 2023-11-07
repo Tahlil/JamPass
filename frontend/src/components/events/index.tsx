@@ -7,8 +7,8 @@ export function Events() {
   const [allEventsSet, setAllEventsSet] = useState<Boolean>(true);
   const [eventDetails, setEvent] = useState({});
   function goToEventDetails(event: any) {
-    setAllEventsSet(false);
     setEvent(event);
+    setAllEventsSet(false);
   }
 
 function gotoEvent() {
@@ -87,13 +87,13 @@ function gotoEvent() {
       ) : (
         <>
           <div className="mb-5">
-            <EventDetails eventDetails />
+            <EventDetails {...eventDetails} />
           </div>
 
           <div>
             <button
               onClick={() => {gotoEvent()}}
-              className="rounded-full bg-purple-900 text-white hover:bg-white hover:text-purple-900 hover:shadow-xl duration-300"
+              className="rounded-full bg-purple-900 text-white hover:bg-white hover:text-purple-900 hover:shadow-xl duration-300 p-3"
             >
               GO To Events Page
             </button>
