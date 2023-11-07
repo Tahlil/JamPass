@@ -10,6 +10,11 @@ export function Events() {
     function goToEventDetails(){
         setAllEventsSet(false);
     }
+
+    function goToEvents(){
+        setAllEventsSet(true);
+    }
+
     return (
         <div className="flex items-center bg-indigo-100">
   <div className="container ml-auto mr-auto flex flex-wrap items-start">
@@ -64,6 +69,9 @@ export function Events() {
     (
         <div>
             Test
+            <button onClick={goToEvents}>
+                Go to events page
+            </button>
         </div>
     )}
     
