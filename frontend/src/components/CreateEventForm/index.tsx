@@ -34,6 +34,23 @@ export function CreateEventForm() {
   const createEvent = async (e: any) => {
     e.preventDefault();
     if (!account?.address) return;
+    console.log({
+        name,
+        datetime,
+        location,
+        description,
+        agenda,
+        speakers,
+        breaks,
+        registration,
+        email,
+        phone,
+        emergency,
+        rules,
+        imageLink,
+        price,
+        transferrable
+    })
     console.log("Creating event...");
     setTransactionInProgress(true);
     const payload = {
@@ -262,7 +279,7 @@ export function CreateEventForm() {
                 type="text"
                 name="email"
                 id="email"
-                onChange={(e) => setLocation(e.currentTarget.value)}
+                onChange={(e) => setEmail(e.currentTarget.value)}
                 placeholder="Event email"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
@@ -296,7 +313,7 @@ export function CreateEventForm() {
                 type="number"
                 name="price"
                 id="price"
-                onChange={(e) => setEmergency("$ " + e.currentTarget.value)}
+                onChange={(e) => setPrice(e.currentTarget.value+" $")}
                 placeholder="$$.$$"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
@@ -325,7 +342,7 @@ export function CreateEventForm() {
               </label>
               <Datepicker
                 minDate={new Date()}
-                onChange={(e) => setDatetime(e.currentTarget.value + "")}
+                onSelectedDateChanged={(val) => setDatetime(val.toString().slice(0, 15))}
               />
             </div>
 
