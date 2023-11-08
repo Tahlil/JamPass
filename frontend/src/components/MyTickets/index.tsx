@@ -39,9 +39,8 @@ export function MyTickets() {
 					</div>
 					<div className="flex flex-col items-center">
 						<span className="text-xl font-bold">⏳</span>
-						<p className="text-zinc-500 text-sm text-bold">{event.datetime.split(" ")[0]}</p>
-						<br />
-						<p className="text-zinc-500 text-sm text-bold">{event.datetime.split(" ")[1]}</p>
+						<p className="text-zinc-500 text-sm text-bold">{event.datetime}</p>
+						
 					</div>
 				</div>
 				<div className="flex w-full mt-auto justify-between p-3 text-sm">
