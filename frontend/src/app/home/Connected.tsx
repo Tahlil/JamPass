@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useWallet } from "@aptos-labs/wallet-adapter-react";
+
 import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
 import { Events } from "@/components/events";
 import { CreateEventForm } from "@/components/CreateEventForm";
 import { MyTickets } from "@/components/MyTickets";
-import { AptosClient } from "aptos";
 import Link from "next/link";
-
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { AptosClient } from "aptos";
 
 const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 
@@ -61,40 +61,7 @@ export function Connected(props: { element: "home" | "event" | "ticket" | "creat
     fetchValue();
   }, [account?.address, fetchValue, network]);
 
-  const createEvent = async () => {
-    if (!account?.address) return;
-    console.log("Create event..")
-    // setTransactionInProgress(true);
-    // console.log({ address });
-    // const payload = {
-    //   type: "entry_function_payload",
-    //   function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
-    //   type_arguments: [],
-    //   arguments: [
-    //     "eventCollection",
-    //     "Test desc",
-    //     11,
-    //     "name",
-    //     "https://images.lumacdn.com/cdn-cgi/image",
-    //     "as",
-    //     "df",
-    //     "jk",
-    //   ],
-    // };
-
-    // try {
-    //   // sign and submit transaction to chain
-    //   const response = await signAndSubmitTransaction(payload);
-    //   console.log({ response });
-    //   // wait for transaction
-    //   await client.waitForTransaction(response.hash);
-    // } catch (error) {
-    //   console.log("error", error);
-    //   console.log({ error });
-    // } finally {
-    //   setTransactionInProgress(false);
-    // }
-  };
+ 
 
   return (
     <div className="flex flex-col gap-3 p-3">

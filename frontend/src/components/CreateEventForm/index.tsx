@@ -1,6 +1,50 @@
 import { Datepicker } from 'flowbite-react';
 import Link from 'next/link';
+import { useState, useEffect, useCallback } from "react";
+import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
+
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { AptosClient } from "aptos";
+
+const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 export function CreateEventForm() {
+ 
+  const [transactionInProgress, setTransactionInProgress] =
+    useState<boolean>(false);
+  const { account, network, signAndSubmitTransaction } = useWallet();
+
+  const createEvent = async () => {
+    if (!account?.address) return;
+    console.log("Creating event...")
+    setTransactionInProgress(true);
+    const payload = {
+      type: "entry_function_payload",
+      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
+      type_arguments: [],
+      arguments: [
+        "Test Description",
+        "Test name",
+        "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
+        "ticket_collection",
+        "ticket_collection_description",
+        "https://cdn.pixabay.com/photo/2018/03/19/00/40/entries-3238747_1280.png",
+      ],
+    };
+
+    try {
+      // sign and submit transaction to chain
+      const response = await signAndSubmitTransaction(payload);
+      console.log({ response });
+      // wait for transaction
+      await client.waitForTransaction(response.hash);
+    } catch (error) {
+      console.log("error", error);
+      console.log({ error });
+    } finally {
+      setTransactionInProgress(false);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-transparent bg-clip-text text-5xl bg-gradient-to-r to-emerald-600 from-sky-400 mb-2">
@@ -231,11 +275,10 @@ export function CreateEventForm() {
             <Datepicker minDate={new Date()}/>
             </div>
           </div>
-          <Link href={"/"}>
-          <button className="mt-7 bg-pink-400 hover:bg-purple-700  block w-1/2 rounded py-4 text-white font-bold shadow">
-            Create Event
+   
+          <button onClick={createEvent} className="mt-7 bg-pink-400 hover:bg-purple-700  block w-1/2 rounded py-4 text-white font-bold shadow">
+            Create Event ➕
           </button>
-          </Link>
         </form>
       </div>
     </div>
