@@ -1,8 +1,12 @@
 import Link from 'next/link';
+import EventData from "../../data/events.json";
+
 export function MyTickets() {
+	const events = EventData.slice(1,3)
+	const event = events[0]
     return (
         <div>
-            <section className="w-full flex-grow bg-zinc-200 flex items-center justify-center p-4">
+            <section className="w-full flex-grow bg-zinc-200 flex items-center justify-center p-4 mb-5">
 		<div className="flex w-full max-w-3xl text-zinc-50 h-64">
 			<div className="h-full bg-zinc-900 flex items-center justify-center px-8 rounded-l-3xl">
 				<img src="https://cdn.qrplanet.com/img/kb/5b4352bb6d961556373d88d0/kb/attachments/QPwdrb2XKN.png" alt="" />
@@ -14,11 +18,11 @@ export function MyTickets() {
 			<div className="h-full py-8 px-10 bg-zinc-900 flex-grow rounded-r-3xl flex flex-col">
 				<div className="flex w-full justify-between items-center">
 					<div className="flex flex-col items-center">
-						<span className="text-4xl font-bold">BNE</span>
-						<span className="text-zinc-500 text-sm">Brisbane</span>
+						<span className="text-3xl font-bold">📍</span>
+						<span className="text-zinc-500 text-sm">{event.location}</span>
 					</div>
 					<div className="flex flex-col flex-grow items-center px-10">
-						<span className="font-bold text-xs">RS 11</span>
+						<span className="font-bold text-xs">{event.price}</span>
 						<div className="w-full flex items-center mt-2">
 							<div className="w-3 h-3 rounded-full border-2 border-zinc-900"></div>
 							<div className="flex-grow border-t-2 border-zinc-400 border-dotted h-px"></div>
@@ -26,35 +30,25 @@ export function MyTickets() {
 							<div className="flex-grow border-t-2 border-zinc-400 border-dotted h-px"></div>
 							<div className="w-3 h-3 rounded-full border-2 border-zinc-900"></div>
 						</div>
-						<div className="flex items-center px-3 rounded-full bg-lime-400 h-8 mt-2">
-							<span className="text-sm text-zinc-900">18h 35m</span>
+						<div className="flex items-center px-3 py-2 rounded-full bg-lime-400 h-8 mt-2">
+							<span className="text-sm text-zinc-900">{event.name}</span>
 						</div>
 					</div>
 					<div className="flex flex-col items-center">
-						<span className="text-4xl font-bold">ATH</span>
-						<span className="text-zinc-500 text-sm">Athens</span>
+						<span className="text-xl font-bold">⏳</span>
+						<p className="text-zinc-500 text-sm text-bold">{event.datetime.split(" ")[0]}</p>
+						<br />
+						<p className="text-zinc-500 text-sm text-bold">{event.datetime.split(" ")[1]}</p>
 					</div>
 				</div>
-				<div className="flex w-full mt-auto justify-between">
-					<div className="flex flex-col">
-						<span className="text-xs text-zinc-400">Date</span>
-						<span className="font-mono">09/06/2023</span>
-					</div>
-					<div className="flex flex-col">
-						<span className="text-xs text-zinc-400">Departure</span>
-						<span className="font-mono">17:45</span>
-					</div>
-					<div className="flex flex-col">
-						<span className="text-xs text-zinc-400">Passenger</span>
-						<span className="font-mono">Rob Stinson</span>
-					</div>
-					<div className="flex flex-col">
-						<span className="text-xs text-zinc-400">Gate/Seat</span>
-						<span className="font-mono">A11/21C</span>
-					</div>
+				<div className="flex w-full mt-auto justify-between p-3 text-sm">
+					{event.description}
 				</div>
+
 			</div>
 		</div>
+		<img src={event.image} width="200" className='mb-11' />
+
 	</section>
         </div>
     )
