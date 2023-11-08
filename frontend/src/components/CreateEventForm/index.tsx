@@ -1,5 +1,7 @@
 import { Datepicker } from 'flowbite-react';
 import Link from 'next/link';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect, useCallback, MouseEvent } from "react";
 import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
 
@@ -23,8 +25,8 @@ export function CreateEventForm() {
       function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
       type_arguments: [],
       arguments: [
-        "Test4 Description",
-        "Test4 name",
+        "Test6 Description",
+        "Test7 name",
         "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
         "ticket4_collection",
         "ticket4_collection_description",
@@ -36,7 +38,8 @@ export function CreateEventForm() {
       // sign and submit transaction to chain
       const response = await signAndSubmitTransaction(payload);
       console.log({ response });
-      alert(response);
+
+      toast(<span>Tx successful! <a href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`} target="_blank" className='underline p-3'> TX Link </a></span>)
       // wait for transaction
       await client.waitForTransaction(response.hash);
     } catch (error) {
@@ -49,6 +52,7 @@ export function CreateEventForm() {
 
   return (
     <div>
+      <ToastContainer />
       <h1 className="text-transparent bg-clip-text text-5xl bg-gradient-to-r to-emerald-600 from-sky-400 mb-2">
         Create Event
       </h1>
