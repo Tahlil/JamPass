@@ -1,73 +1,101 @@
-module tahlil::test {
+module MyAddr::test {
     use std::option;
-    use std::string::{Self, String};
     use std::signer;
-    use std::debug;
-
+    use std::string::{Self, String};
     use aptos_framework::object::{Self, Object};
-
+    use aptos_std::smart_vector::{Self, SmartVector};
     use aptos_token_objects::collection;
     use aptos_token_objects::token;
 
-    use aptos_std::smart_vector::{Self, SmartVector};
-
     const ENOT_ADMIN: u64 = 1;
-    const ENOT_EVENT_MANAGER: u64 = 2;
-    const ENOT_OWNER: u64 = 3;
+    const ENOT_OWNER: u64 = 2;
+    const ENOT_EVENT_MANGER: u64 = 3;
 
+    const EVENT_COLLECTION_NAME: vector<u8> = b"Event Collection Name";
+    const EVENT_COLLECTION_DESCRIPTION: vector<u8> = b"event Collection Description";
+    const EVENT_COLLECTION_URI: vector<u8> = b"https://event.collection.uri";
+
+    /// Published under the contract owner's account.
     struct Config has key {
-        whitelist: SmartVector<address>, // Whitelisting event managers
-        extend_ref: object::ExtendRef, /// `extend_ref` of the event manager object. Used to obtain its signer.
+        /// Whitelist of event managers.
+        whitelist: SmartVector<address>,
+        /// `extend_ref` of the event collection manager object. Used to obtain its signer.
+        extend_ref: object::ExtendRef,
     }
 
     #[resource_group_member(group = aptos_framework::object::ObjectGroup)]
-    // Event Token
+    /// Event token
     struct EventToken has key {
-        extend_ref: object::ExtendRef, 
-        event_collection_name: String, 
+        /// Used to get the signer of the token
+        extend_ref: object::ExtendRef,
+        /// ticket collection name
+        ticket_collection_name: String,
     }
 
     #[resource_group_member(group = aptos_framework::object::ObjectGroup)]
-    // Ticket token
+    /// Ticket token
     struct TicketToken has key {
-        event: Object<EventToken>, // Belonging to event
-        transfer_ref: object::TransferRef,
+        /// Belonging event
+        event: Object<EventToken>,
+        price:u64
     }
 
-    // This function allows the admin to add an event manager to the whitelist.
-    public entry fun whitelist_event_manager(admin: &signer, event_manager: address) acquires Config {
-        assert!(signer::address_of(admin) == @tahlil, ENOT_ADMIN);
-        let config = borrow_global_mut<Config>(signer::address_of(admin));
-        smart_vector::push_back(&mut config.whitelist, event_manager);
+    /// Initializes the module, creating the manager object, the event token collection and the whitelist.
+    fun init_module(sender: &signer) acquires Config {
+        // Create the event collection manager object to use it to autonomously
+        // manage the event collection (e.g., create the collection and mint tokens).
+        let constructor_ref = object::create_object(signer::address_of(sender));
+        let extend_ref = object::generate_extend_ref(&constructor_ref);
+
+        // Publish the config resource.
+        move_to(sender, Config { whitelist: smart_vector::new(), extend_ref});
+
+        // Create the event collection.
+        create_event_collection(&event_collection_manager_signer());
     }
 
     #[view]
-    public fun is_whitelisted(event_manager: address): bool acquires Config{
-        let whitelist = &borrow_global<Config>(@tahlil).whitelist;
-        smart_vector::contains(whitelist, &event_manager)
+    /// Returns the event token address by name
+    public fun event_token_address(event_token_name: String): address acquires Config {
+        token::create_token_address(&event_collection_manager_address(), &string::utf8(EVENT_COLLECTION_NAME), &event_token_name)
     }
 
-    fun event_manager_signer(): signer acquires Config {
-        let manager = borrow_global<Config>(@tahlil);
-        object::generate_signer_for_extending(&manager.extend_ref)
+    #[view]
+    /// Returns the ticket token address by name
+    public fun ticket_token_address(event_token: Object<EventToken>, ticket_token_name: String): address acquires EventToken {
+        let event_token_addr = object::object_address(&event_token);
+        let ticket_collection_name = &borrow_global<EventToken>(event_token_addr).ticket_collection_name;
+        token::create_token_address(&event_token_addr, ticket_collection_name, &ticket_token_name)
     }
 
+    /// Adds an event manager to the whitelist. This function allows the admin to add an event manager
+    /// to the whitelist.
+    public entry fun whitelist_event_manager(admin: &signer, event_manager: address) acquires Config {
+        assert!(signer::address_of(admin) == event_collection_manager_owner(), ENOT_ADMIN);
+        let config = borrow_global_mut<Config>(@MyAddr);
+        smart_vector::push_back(&mut config.whitelist, event_manager);
+    }
+
+    /// Mints a event token, and creates a new associated ticket collection.
+    /// This function allows a whitelisted event manager to mint a new event token.
     public entry fun mint_event(
         event_manager: &signer,
-        collection: String,
         description: String,
-        max_supply: u64,
         name: String,
         uri: String,
-        event_collection_name: String,
-        event_collection_description: String,
-        event_collection_uri: String,
+        ticket_collection_name: String,
+        ticket_collection_description: String,
+        ticket_collection_uri: String,
     ) acquires Config {
-        let event_manager_address = signer::address_of(event_manager);
-        assert!(is_whitelisted(event_manager_address), ENOT_EVENT_MANAGER);
+        // Checks if the event manager is whitelisted.
+        let event_manager_addr = signer::address_of(event_manager);
+        assert!(is_whitelisted(event_manager_addr), ENOT_EVENT_MANGER);
 
+        let collection = string::utf8(EVENT_COLLECTION_NAME);
+        // Creates the event token, and get the constructor ref of the token. The constructor ref
+        // is used to generate the refs of the token.
         let constructor_ref = token::create_named_token(
-            &event_manager_signer(),
+            &event_collection_manager_signer(),
             collection,
             description,
             name,
@@ -79,36 +107,25 @@ module tahlil::test {
         let object_signer = object::generate_signer(&constructor_ref);
         let extend_ref = object::generate_extend_ref(&constructor_ref);
 
-        // Transfers the token to the event.
+        // Transfers the token to the guild master.
         let transfer_ref = object::generate_transfer_ref(&constructor_ref);
         let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
-        object::transfer_with_ref(linear_transfer_ref, event_manager_address);
+        object::transfer_with_ref(linear_transfer_ref, event_manager_addr);
 
 
-        // Publishes the EventManagerToken resource with the refs.
+        // Publishes the EventToken resource with the refs.
         let event_token = EventToken {
             extend_ref,
-            event_collection_name,
+            ticket_collection_name,
         };
         move_to(&object_signer, event_token);
 
-        // Creates an event collection which is associated to the  EventToken.
-        create_event_collection(&object_signer, event_collection_name, event_collection_description, event_collection_uri, max_supply);
+        // Creates a ticket collection which is associated to the event token.
+        create_ticket_collection(&object_signer, ticket_collection_name, ticket_collection_description, ticket_collection_uri);
     }
 
-    fun create_event_collection(event_token_object_signer: &signer, name: String, description: String, uri: String, max_supply: u64) {
-        // Creates the collection with unlimited supply and without establishing any royalty configuration.
-        collection::create_fixed_collection(
-            event_token_object_signer,
-            description,
-            max_supply,
-            name,
-            option::none(),
-            uri,
-        );
-    }
-
-    // This function mints a new Event token and transfers it to the `receiver` address.
+    /// Mints a ticket token. This function mints a new ticket token and transfers it to the
+    /// `receiver` address.
     public entry fun mint_ticket(
         event_manager: &signer,
         event_token: Object<EventToken>,
@@ -116,17 +133,18 @@ module tahlil::test {
         name: String,
         uri: String,
         receiver: address,
+        price: u64
     ) acquires EventToken {
         // Checks if the event manager is the owner of the event token.
         assert!(object::owner(event_token) == signer::address_of(event_manager), ENOT_OWNER);
 
         let event = borrow_global<EventToken>(object::object_address(&event_token));
         let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
-        // Creates the member token, and get the constructor ref of the token. The constructor ref
+        // Creates the ticket token, and get the constructor ref of the token. The constructor ref
         // is used to generate the refs of the token.
         let constructor_ref = token::create_named_token(
             &event_token_object_signer,
-            event.event_collection_name,
+            event.ticket_collection_name,
             description,
             name,
             option::none(),
@@ -135,92 +153,75 @@ module tahlil::test {
 
         // Generates the object signer and the refs. The refs are used to manage the token.
         let object_signer = object::generate_signer(&constructor_ref);
-        let burn_ref = token::generate_burn_ref(&constructor_ref);
         let transfer_ref = object::generate_transfer_ref(&constructor_ref);
 
         // Transfers the token to the `soul_bound_to` address
         let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
         object::transfer_with_ref(linear_transfer_ref, receiver);
-        object::disable_ungated_transfer(&transfer_ref);
 
         // Publishes the TicketToken resource with the refs.
         let ticket_token = TicketToken {
             event: event_token,
-            transfer_ref
+            price,
         };
         move_to(&object_signer, ticket_token);
     }
 
+    /// Returns the signer of the event collection manager object.
+    fun event_collection_manager_signer(): signer acquires Config {
+        let manager = borrow_global<Config>(@MyAddr);
+        object::generate_signer_for_extending(&manager.extend_ref)
+    }
+
+    /// Returns the signer of the event collection manager object.
+    fun event_collection_manager_owner(): address acquires Config {
+        let manager = borrow_global<Config>(@MyAddr);
+        let manager_addr = object::address_from_extend_ref(&manager.extend_ref);
+        object::owner(object::address_to_object<object::ObjectCore>(manager_addr))
+    }
+
+    /// Returns the address of the event collection manager object.
     fun event_collection_manager_address(): address acquires Config {
-        let manager = borrow_global<Config>(@tahlil);
+        let manager = borrow_global<Config>(@MyAddr);
         object::address_from_extend_ref(&manager.extend_ref)
     }
 
-     public fun event_token_address(event_token_name: String, collection: String): address acquires Config {
-        token::create_token_address(&event_collection_manager_address(), &collection, &event_token_name)
-    }
+    /// Creates the event collection. This function creates a collection with unlimited supply using
+    /// the module constants for description, name, and URI, defined above. The royalty configuration
+    /// is skipped in this collection for simplicity.
+    fun create_event_collection(admin: &signer) {
+        // Constructs the strings from the bytes.
+        let description = string::utf8(EVENT_COLLECTION_DESCRIPTION);
+        let name = string::utf8(EVENT_COLLECTION_NAME);
+        let uri = string::utf8(EVENT_COLLECTION_URI);
 
-    struct Greeting has key {
-        greeting: String
-    }
-
-    fun init_module(deployer: &signer) {
-        move_to(deployer, Greeting{
-            greeting: string::utf8(b"Hello World")
-        });
-        // Create the event manager object to use it to autonomously
-        // manage the collection (e.g., create the collection and mint tokens).
-        let constructor_ref = object::create_object(signer::address_of(deployer));
-        let extend_ref = object::generate_extend_ref(&constructor_ref);
-
-        // Publish the config resource.
-        move_to(deployer, Config { whitelist: smart_vector::new(), extend_ref});
-    }
-
-    public entry fun update_greeting(account: &signer, new_greeting: String) acquires Greeting {
-        let greet = borrow_global_mut<Greeting>(signer::address_of(account));
-        greet.greeting = new_greeting;
-    }
-
-    #[test(admin = @tahlil, event_manager = @0x456, fx = @std, user = @0x789)]
-    public entry fun test_whitelisted(fx: signer, admin: &signer, event_manager: &signer, user: address) acquires Config, EventToken{
-        use std::features;
-
-        let feature = features::get_auids();
-        features::change_feature_flags(&fx, vector[feature], vector[]);
-
-        assert!(signer::address_of(admin) == @tahlil, ENOT_ADMIN);
-        init_module(admin);
-        whitelist_event_manager(admin, signer::address_of(event_manager));
-        let whitelisted = is_whitelisted(signer::address_of(event_manager));
-        debug::print<bool>(&whitelisted);
-
-        mint_event(
-            event_manager,
-            string::utf8(b"Guild Token #1 Collection"),
-            string::utf8(b"Guild Token #1 Description"),
-            10000,
-            string::utf8(b"Guild Token #1"),
-            string::utf8(b"Guild Token #1 URI"),
-            string::utf8(b"Member Collection #1"),
-            string::utf8(b"Member Collection #1 Description"),
-            string::utf8(b"Member Collection #1 URI"),
+        // Creates the collection with unlimited supply and without establishing any royalty configuration.
+        collection::create_unlimited_collection(
+            admin,
+            description,
+            name,
+            option::none(),
+            uri,
         );
+    }
 
-        let token_name = string::utf8(b"Member Token #1");
-        let token_description = string::utf8(b"Member Token #1 Description");
-        let token_uri = string::utf8(b"Member Token #1 URI");
-        let guild_token_addr = event_token_address(string::utf8(b"Guild Token #1"), string::utf8(b"Guild Token #1 Collection"));
-        let guild_token = object::address_to_object<EventToken>(guild_token_addr);
-
-        mint_ticket(
-            event_manager,
-            guild_token,
-            token_description,
-            token_name,
-            token_uri,
-            user,
+    /// Creates the ticket collection. This function creates a collection with unlimited supply using
+    /// the module constants for description, name, and URI, defined above. The royalty configuration
+    /// is skipped in this collection for simplicity.
+    fun create_ticket_collection(event_token_object_signer: &signer, name: String, description: String, uri: String) {
+        // Creates the collection with unlimited supply and without establishing any royalty configuration.
+        collection::create_unlimited_collection(
+            event_token_object_signer,
+            description,
+            name,
+            option::none(),
+            uri,
         );
+    }
+
+    public fun is_whitelisted(event_manager: address): bool acquires Config {
+        let whitelist = &borrow_global<Config>(@MyAddr).whitelist;
+        smart_vector::contains(whitelist, &event_manager)
     }
 
 }

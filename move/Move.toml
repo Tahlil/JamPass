@@ -1,11 +1,11 @@
 [package]
-name = 'greeting'
+name = 'minttoken'
 version = '1.0.0'
 upgrade_policy = "compatible"
 
-# value of tahlil should be the same as .aptos/config.yaml file "account" value
+# value of MyAddr should be the same as .aptos/config.yaml file "account" value
 [addresses]
-tahlil='aeb489f1b55ebb7b00926879ea2dceaf7bac94556649b83e1dd1a2bf41c017c8'
+MyAddr='819097522ec8cae40cf4d613cff343ea74b3cf4e11b807966ad443fbe43c9f30'
 Std = "0x1"
 aptos_std = "0x1"
 aptos_framework = "0x1"
