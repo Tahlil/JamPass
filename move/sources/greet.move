@@ -1,4 +1,4 @@
-module MyAddr::test {
+module MyAddr::test1 {
     use std::option;
     use std::signer;
     use std::string::{Self, String};
@@ -32,6 +32,17 @@ module MyAddr::test {
         extend_ref: object::ExtendRef,
         /// ticket collection name
         ticket_collection_name: String,
+        datetime: String,
+        location: String,
+        agenda: String,
+        speakers: String,
+        breaks: String,
+        registration: String,
+        contact: String,
+        emergency: String,
+        rules: String,
+        price: String,
+        transferrable: bool
     }
 
     #[resource_group_member(group = aptos_framework::object::ObjectGroup)]
@@ -85,6 +96,17 @@ module MyAddr::test {
         description: String,
         name: String,
         uri: String,
+        datetime: String,
+        location: String,
+        agenda: String,
+        speakers: String,
+        breaks: String,
+        registration: String,
+        contact: String,
+        emergency: String,
+        rules: String,
+        price: String,
+        transferrable: bool,
         ticket_collection_name: String,
         ticket_collection_description: String,
         ticket_collection_uri: String,
@@ -119,6 +141,17 @@ module MyAddr::test {
         let event_token = EventToken {
             extend_ref,
             ticket_collection_name,
+            datetime,
+            location,
+            agenda,
+            speakers,
+            breaks,
+            registration,
+            contact,
+            emergency,
+            rules,
+            price,
+            transferrable
         };
         move_to(&object_signer, event_token);
 
@@ -128,87 +161,87 @@ module MyAddr::test {
 
     /// Mints a ticket token. This function mints a new ticket token and transfers it to the
     /// `receiver` address.
-    public entry fun mint_ticket(
-        event_manager: &signer,
-        event_token: Object<EventToken>,
-        description: String,
-        name: String,
-        uri: String,
-        receiver: address,
-        price: u64
-    ) acquires EventToken {
-        // Checks if the event manager is the owner of the event token.
-        // assert!(object::owner(event_token) == signer::address_of(event_manager), ENOT_OWNER);
+    // public entry fun mint_ticket(
+    //     event_manager: &signer,
+    //     event_token: Object<EventToken>,
+    //     description: String,
+    //     name: String,
+    //     uri: String,
+    //     receiver: address,
+    //     price: u64
+    // ) acquires EventToken {
+    //     // Checks if the event manager is the owner of the event token.
+    //     // assert!(object::owner(event_token) == signer::address_of(event_manager), ENOT_OWNER);
 
-        let event = borrow_global<EventToken>(object::object_address(&event_token));
-        let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
-        // Creates the ticket token, and get the constructor ref of the token. The constructor ref
-        // is used to generate the refs of the token.
-        let constructor_ref = token::create_named_token(
-            &event_token_object_signer,
-            event.ticket_collection_name,
-            description,
-            name,
-            option::none(),
-            uri,
-        );
+    //     let event = borrow_global<EventToken>(object::object_address(&event_token));
+    //     let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
+    //     // Creates the ticket token, and get the constructor ref of the token. The constructor ref
+    //     // is used to generate the refs of the token.
+    //     let constructor_ref = token::create_named_token(
+    //         &event_token_object_signer,
+    //         event.ticket_collection_name,
+    //         description,
+    //         name,
+    //         option::none(),
+    //         uri,
+    //     );
 
-        // Generates the object signer and the refs. The refs are used to manage the token.
-        let object_signer = object::generate_signer(&constructor_ref);
-        let transfer_ref = object::generate_transfer_ref(&constructor_ref);
+    //     // Generates the object signer and the refs. The refs are used to manage the token.
+    //     let object_signer = object::generate_signer(&constructor_ref);
+    //     let transfer_ref = object::generate_transfer_ref(&constructor_ref);
 
-        // Transfers the token to the `soul_bound_to` address
-        let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
-        object::transfer_with_ref(linear_transfer_ref, receiver);
+    //     // Transfers the token to the `soul_bound_to` address
+    //     let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
+    //     object::transfer_with_ref(linear_transfer_ref, receiver);
 
-        // Publishes the TicketToken resource with the refs.
-        let ticket_token = TicketToken {
-            event: event_token,
-            price,
-        };
-        move_to(&object_signer, ticket_token);
-    }
+    //     // Publishes the TicketToken resource with the refs.
+    //     let ticket_token = TicketToken {
+    //         event: event_token,
+    //         price,
+    //     };
+    //     move_to(&object_signer, ticket_token);
+    // }
 
-    public entry fun buy_ticket(
-        customer: &signer,
-        event_token: Object<EventToken>,
-        description: String,
-        name: String,
-        uri: String,
-        receiver: address,
-        price: u64
-    ) acquires EventToken {
-        // Checks if the event manager is the owner of the event token.
-        assert!(object::owner(event_token) != signer::address_of(customer), ENOT_CUSTOMER);
+    // public entry fun buy_ticket(
+    //     customer: &signer,
+    //     event_token: Object<EventToken>,
+    //     description: String,
+    //     name: String,
+    //     uri: String,
+    //     receiver: address,
+    //     price: u64
+    // ) acquires EventToken {
+    //     // Checks if the event manager is the owner of the event token.
+    //     assert!(object::owner(event_token) != signer::address_of(customer), ENOT_CUSTOMER);
 
-        let event = borrow_global<EventToken>(object::object_address(&event_token));
-        let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
-        // Creates the ticket token, and get the constructor ref of the token. The constructor ref
-        // is used to generate the refs of the token.
-        let constructor_ref = token::create_named_token(
-            &event_token_object_signer,
-            event.ticket_collection_name,
-            description,
-            name,
-            option::none(),
-            uri,
-        );
+    //     let event = borrow_global<EventToken>(object::object_address(&event_token));
+    //     let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
+    //     // Creates the ticket token, and get the constructor ref of the token. The constructor ref
+    //     // is used to generate the refs of the token.
+    //     let constructor_ref = token::create_named_token(
+    //         &event_token_object_signer,
+    //         event.ticket_collection_name,
+    //         description,
+    //         name,
+    //         option::none(),
+    //         uri,
+    //     );
 
-        // Generates the object signer and the refs. The refs are used to manage the token.
-        let object_signer = object::generate_signer(&constructor_ref);
-        let transfer_ref = object::generate_transfer_ref(&constructor_ref);
+    //     // Generates the object signer and the refs. The refs are used to manage the token.
+    //     let object_signer = object::generate_signer(&constructor_ref);
+    //     let transfer_ref = object::generate_transfer_ref(&constructor_ref);
 
-        // Transfers the token to the `soul_bound_to` address
-        let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
-        object::transfer_with_ref(linear_transfer_ref, receiver);
+    //     // Transfers the token to the `soul_bound_to` address
+    //     let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
+    //     object::transfer_with_ref(linear_transfer_ref, receiver);
 
-        // Publishes the TicketToken resource with the refs.
-        let ticket_token = TicketToken {
-            event: event_token,
-            price,
-        };
-        move_to(&object_signer, ticket_token);
-    }
+    //     // Publishes the TicketToken resource with the refs.
+    //     let ticket_token = TicketToken {
+    //         event: event_token,
+    //         price,
+    //     };
+    //     move_to(&object_signer, ticket_token);
+    // }
 
     /// Returns the signer of the event collection manager object.
     fun event_collection_manager_signer(): signer acquires Config {
