@@ -101,7 +101,7 @@ export function Events(props: { userType: string }) {
                 </button>
                 <dialog className="nes-dialog is-rounded" id="dialog-rounded">
                   <form method="dialog">
-                    <p className="title p-3">Rounded dialog</p>
+                    <p className="title p-3">Click confirm to buy ticket</p>
                     <p>Event Name: {eventDetails?.name}</p>
                     <menu className="dialog-menu p-3">
                       <button className="nes-btn m-2">Cancel</button>
