@@ -1,5 +1,5 @@
 import { Datepicker } from "flowbite-react";
-import Link from "next/link";
+import { useRouter } from 'next/router'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect, useCallback, MouseEvent } from "react";
@@ -10,6 +10,7 @@ import { AptosClient } from "aptos";
 
 const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 export function CreateEventForm() {
+  const router = useRouter()
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
 
@@ -98,6 +99,7 @@ export function CreateEventForm() {
       );
       // wait for transaction
       await client.waitForTransaction(response.hash);
+      router.push('/events')
     } catch (error) {
       console.log("error", error);
       console.log({ error });
