@@ -9,7 +9,9 @@ module MyAddr::test {
 
     const ENOT_ADMIN: u64 = 1;
     const ENOT_OWNER: u64 = 2;
+    
     const ENOT_EVENT_MANGER: u64 = 3;
+    const ENOT_CUSTOMER: u64 = 4;
 
     const EVENT_COLLECTION_NAME: vector<u8> = b"Event Collection Name";
     const EVENT_COLLECTION_DESCRIPTION: vector<u8> = b"event Collection Description";
@@ -136,7 +138,48 @@ module MyAddr::test {
         price: u64
     ) acquires EventToken {
         // Checks if the event manager is the owner of the event token.
-        assert!(object::owner(event_token) == signer::address_of(event_manager), ENOT_OWNER);
+        // assert!(object::owner(event_token) == signer::address_of(event_manager), ENOT_OWNER);
+
+        let event = borrow_global<EventToken>(object::object_address(&event_token));
+        let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
+        // Creates the ticket token, and get the constructor ref of the token. The constructor ref
+        // is used to generate the refs of the token.
+        let constructor_ref = token::create_named_token(
+            &event_token_object_signer,
+            event.ticket_collection_name,
+            description,
+            name,
+            option::none(),
+            uri,
+        );
+
+        // Generates the object signer and the refs. The refs are used to manage the token.
+        let object_signer = object::generate_signer(&constructor_ref);
+        let transfer_ref = object::generate_transfer_ref(&constructor_ref);
+
+        // Transfers the token to the `soul_bound_to` address
+        let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
+        object::transfer_with_ref(linear_transfer_ref, receiver);
+
+        // Publishes the TicketToken resource with the refs.
+        let ticket_token = TicketToken {
+            event: event_token,
+            price,
+        };
+        move_to(&object_signer, ticket_token);
+    }
+
+    public entry fun buy_ticket(
+        customer: &signer,
+        event_token: Object<EventToken>,
+        description: String,
+        name: String,
+        uri: String,
+        receiver: address,
+        price: u64
+    ) acquires EventToken {
+        // Checks if the event manager is the owner of the event token.
+        assert!(object::owner(event_token) != signer::address_of(customer), ENOT_CUSTOMER);
 
         let event = borrow_global<EventToken>(object::object_address(&event_token));
         let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
