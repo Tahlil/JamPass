@@ -3,10 +3,11 @@ import EventData from "../../data/events.json";
 
 export function MyTickets() {
 	const events = EventData.slice(1,3)
-	const event = events[0]
+	// const event = events[0]
     return (
         <div>
-            <section className="w-full flex-grow bg-zinc-200 flex items-center justify-center p-4 mb-5">
+			{events.map(event => (
+				<section className="w-full flex-grow bg-zinc-200 flex items-center justify-center p-4 mb-5">
 		<div className="flex w-full max-w-3xl text-zinc-50 h-64">
 			<div className="h-full bg-zinc-900 flex items-center justify-center px-8 rounded-l-3xl">
 				<img src="https://cdn.qrplanet.com/img/kb/5b4352bb6d961556373d88d0/kb/attachments/QPwdrb2XKN.png" alt="" />
@@ -50,6 +51,8 @@ export function MyTickets() {
 		<img src={event.image} width="200" className='mb-11' />
 
 	</section>
+			))}
+            
         </div>
     )
 }
