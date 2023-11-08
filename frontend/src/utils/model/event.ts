@@ -11,5 +11,6 @@ export type Event = {
     emergency: String,
     image?: String,
     price: String,
-    transferrable: Boolean
+    transferrable: Boolean,
+    rules: String
 }

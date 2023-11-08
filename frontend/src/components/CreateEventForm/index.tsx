@@ -25,9 +25,10 @@ export function CreateEventForm() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [emergency, setEmergency] = useState("");
+  const [rules, setRules] = useState("");
   const [imageLink, setImageLink] = useState("");
   const [price, setPrice] = useState("");
-  const [transferrable, settransferrable] = useState(true);
+  const [transferrable, setTransferrable] = useState(true);
  
 
   const { account, network, signAndSubmitTransaction } = useWallet();
@@ -120,6 +121,7 @@ export function CreateEventForm() {
                 name="name"
                 id="name"
                 placeholder="Event name"
+                onChange={(e) => setName(e.currentTarget.value)}
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
             </div>
@@ -134,6 +136,7 @@ export function CreateEventForm() {
                 placeholder="Event description"
                 className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
                 name="description"
+                onChange={(e) => setDescription(e.currentTarget.value)}
               ></textarea>
             </div>
 
@@ -147,6 +150,7 @@ export function CreateEventForm() {
                 placeholder="Event agendas"
                 className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
                 name="agendas"
+                onChange={(e) => setAgenda(e.currentTarget.value)}
               ></textarea>
             </div>
 
@@ -160,7 +164,8 @@ export function CreateEventForm() {
                 placeholder="Event speakers"
                 className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
                 name="speakers"
-              ></textarea>
+                onChange={(e) => setSpeakers(e.currentTarget.value)}
+                ></textarea>
             </div>
 
             <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
@@ -171,7 +176,8 @@ export function CreateEventForm() {
                 placeholder="Event breaks"
                 className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
                 name="breaks"
-              ></textarea>
+                onChange={(e) => setBreaks(e.currentTarget.value)}
+                ></textarea>
             </div>
 
             <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
@@ -184,7 +190,8 @@ export function CreateEventForm() {
                 placeholder="Enter registration process"
                 className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
                 name="registration"
-              ></textarea>
+                onChange={(e) => setRegistration(e.currentTarget.value)}
+                ></textarea>
             </div>
 
             <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
@@ -197,7 +204,8 @@ export function CreateEventForm() {
                 placeholder="Enter detailed protocol on emergency"
                 className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
                 name="emergency"
-              ></textarea>
+                onChange={(e) => setEmergency(e.currentTarget.value)}
+                ></textarea>
             </div>
 
             <div className="box border rounded flex flex-col shadow bg-white bg-purple-400 border-purple-500 mb-10">
@@ -210,7 +218,8 @@ export function CreateEventForm() {
                 placeholder="Enter event rules"
                 className="text-grey-darkest h-32 p-2 m-1 bg-transparent resize-y rounded-md"
                 name="rules"
-              ></textarea>
+                onChange={(e) => setRules(e.currentTarget.value)}
+                ></textarea>
             </div>
 
             <div className="flex flex-row items-center bg-purple-400  rounded-b-lg border-purple-500 mb-10">
@@ -225,6 +234,7 @@ export function CreateEventForm() {
                 name="location"
                 id="location"
                 placeholder="Event location"
+                onChange={(e) => setLocation(e.currentTarget.value)}
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
             </div>
@@ -240,6 +250,7 @@ export function CreateEventForm() {
                 type="text"
                 name="email"
                 id="email"
+                onChange={(e) => setLocation(e.currentTarget.value)}
                 placeholder="Event email"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
@@ -256,6 +267,7 @@ export function CreateEventForm() {
                 type="text"
                 name="phone"
                 id="phone"
+                onChange={(e) => setPhone(e.currentTarget.value)}
                 placeholder="Event phone number"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
@@ -272,6 +284,7 @@ export function CreateEventForm() {
                 type="number"
                 name="price"
                 id="price"
+                onChange={(e) => setEmergency("$ " + e.currentTarget.value)}
                 placeholder="$$.$$"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
@@ -288,6 +301,7 @@ export function CreateEventForm() {
                 type="text"
                 name="image"
                 id="image"
+                onChange={(e) => setImageLink(e.currentTarget.value)}
                 placeholder="Event image link"
                 className="flex w-[100%] p-4 pl-0 bg-transparent placeholder-purple-300 outline-none text-white overflow-ellipsis overflow-hidden"
               />
@@ -295,7 +309,9 @@ export function CreateEventForm() {
 
             <div className='mb-10 flex justify-start'>
                 <label htmlFor="" className='mr-3'>Event Date: </label>
-            <Datepicker minDate={new Date()}/>
+            <Datepicker minDate={new Date()}
+                onChange={(e) => setDatetime(e.currentTarget.value+"")}
+            />
             </div>
           </div>
 
@@ -304,13 +320,19 @@ export function CreateEventForm() {
   
     <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
         <div className="flex items-center pl-3">
-            <input id="horizontal-list-radio-millitary" type="radio" value="" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
+            <input id="horizontal-list-radio-millitary" type="radio" value="t" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+            onChange={(e) => setTransferrable(e.currentTarget.value === "t")}
+            
+            />
             <label htmlFor="horizontal-list-radio-millitary" className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Transferrable</label>
         </div>
     </li>
     <li className="w-full dark:border-gray-600">
         <div className="flex items-center pl-3">
-            <input id="horizontal-list-radio-passport" type="radio" value="" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"/>
+            <input id="horizontal-list-radio-passport" type="radio" value="nt" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+            onChange={(e) => setTransferrable(e.currentTarget.value !== "nt")}
+
+            />
             <label htmlFor="horizontal-list-radio-passport" className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Non Transferrable</label>
         </div>
     </li>
