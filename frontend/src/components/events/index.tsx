@@ -1,10 +1,21 @@
 import { useState } from "react";
 import EventData from "../../data/events.json";
 import { EventDetails } from "../EventDetails";
+import { ToastContainer, toast } from 'react-toastify';
 
+import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
+
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { AptosClient } from "aptos";
+
+const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
 export function Events(props: { userType: string }) {
   const [allEventsSet, setAllEventsSet] = useState<Boolean>(true);
   const [eventDetails, setEvent] = useState<Event>();
+  const [transactionInProgress, setTransactionInProgress] =
+    useState<boolean>(false);
+  const { account, network, signAndSubmitTransaction } = useWallet();
+
   function goToEventDetails(event: any) {
     setEvent(event);
     setAllEventsSet(false);
@@ -14,11 +25,47 @@ export function Events(props: { userType: string }) {
     setAllEventsSet(true);
   }
 
+  const buyTicket = async (e: any) => {
+    e.preventDefault();
+    if (!account?.address) return;
+    console.log("buying ticket...")
+    setTransactionInProgress(true);
+    const payload = {
+      type: "entry_function_payload",
+      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
+      type_arguments: [],
+      arguments: [
+        "Test9 Description",
+        "Test9 name",
+        "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
+        "ticket9_collection",
+        "ticket9_collection_description",
+        "https://cdn.pixabay.com/photo/2018/03/19/00/40/entries-3238747_1280.png",
+      ],
+    };
+
+    try {
+      // sign and submit transaction to chain
+      const response = await signAndSubmitTransaction(payload);
+      console.log({ response });
+
+      toast(<span>Tx successful! <a href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`} target="_blank" className='underline p-1'> TX Link </a></span>)
+      // wait for transaction
+      await client.waitForTransaction(response.hash);
+    } catch (error) {
+      console.log("error", error);
+      console.log({ error });
+    } finally {
+      setTransactionInProgress(false);
+    }
+  };
+
   return (
     <>
       {allEventsSet ? (
         <>
           <div className="flex items-center bg-indigo-100">
+            <ToastContainer/>
             <div className="container ml-auto mr-auto flex flex-wrap items-start">
               <div className="w-full pl-5 lg:pl-2 mb-4 mt-4">
                 <h1 className="text-3xl lg:text-4xl text-gray-700 font-extrabold">

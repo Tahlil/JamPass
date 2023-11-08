@@ -25,11 +25,11 @@ export function CreateEventForm() {
       function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
       type_arguments: [],
       arguments: [
-        "Test6 Description",
-        "Test7 name",
+        "JJJ",
+        "JJJ",
         "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
-        "ticket4_collection",
-        "ticket4_collection_description",
+        "ticketjjj_collection",
+        "ticketjjj_collection_description",
         "https://cdn.pixabay.com/photo/2018/03/19/00/40/entries-3238747_1280.png",
       ],
     };
