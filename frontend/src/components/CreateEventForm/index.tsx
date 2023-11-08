@@ -55,15 +55,26 @@ export function CreateEventForm() {
     setTransactionInProgress(true);
     const payload = {
       type: "entry_function_payload",
-      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
+      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::mint_event`,
       type_arguments: [],
       arguments: [
-        "JJJ",
-        "JJJ",
-        "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
-        "ticketjjj_collection",
-        "ticketjjj_collection_description",
-        "https://cdn.pixabay.com/photo/2018/03/19/00/40/entries-3238747_1280.png",
+        description,
+        name,
+        imageLink,
+        datetime,
+        location,
+        agenda,
+        speakers,
+        breaks,
+        registration,
+        `Email: ${email}, Phone: ${phone}`,
+        emergency,
+        rules,
+        price,
+        transferrable,
+        name,
+        description,
+        ""
       ],
     };
 

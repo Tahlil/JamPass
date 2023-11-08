@@ -27,7 +27,7 @@ export function Connected(props: { element: "home" | "event" | "ticket" | "creat
     console.log({ address });
     const payload = {
       type: "entry_function_payload",
-      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::whitelist_event_manager`,
+      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::whitelist_event_manager`,
       type_arguments: [],
       arguments: [address],
     };
@@ -51,8 +51,9 @@ export function Connected(props: { element: "home" | "event" | "ticket" | "creat
     const value = await client.getAccountResources(
       NEXT_PUBLIC_CONTRACT_ADDRESS
     );
-    if (!value[0].data.whitelist) return;
-    setAccountIsWhitelisted(value[0].data.whitelist.inline_vec.includes(account?.address+""))
+    console.log({value})
+    if (!value[1].data.whitelist) return;
+    setAccountIsWhitelisted(value[1].data.whitelist.inline_vec.includes(account?.address+""))
   }, [account?.address]);
 
   useEffect(() => {

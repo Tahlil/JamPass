@@ -32,7 +32,7 @@ export function Events(props: { userType: string }) {
     setTransactionInProgress(true);
     const payload = {
       type: "entry_function_payload",
-      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::mint_event`,
+      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::mint_event`,
       type_arguments: [],
       arguments: [
         "Test9 Description",
