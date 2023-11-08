@@ -39,7 +39,7 @@ export function CreateEventForm() {
       const response = await signAndSubmitTransaction(payload);
       console.log({ response });
 
-      toast(<span>Tx successful! <a href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`} target="_blank" className='underline p-3'> TX Link </a></span>)
+      toast(<span>Tx successful! <a href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`} target="_blank" className='underline p-1'> TX Link </a></span>)
       // wait for transaction
       await client.waitForTransaction(response.hash);
     } catch (error) {
