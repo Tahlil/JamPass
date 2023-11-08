@@ -13,6 +13,23 @@ export function CreateEventForm() {
  
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
+
+  const [name, setName] = useState("");
+  const [datetime, setDatetime] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [agenda, setAgenda] = useState("");
+  const [speakers, setSpeakers] = useState("");
+  const [breaks, setBreaks] = useState("");
+  const [registration, setRegistration] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [emergency, setEmergency] = useState("");
+  const [imageLink, setImageLink] = useState("");
+  const [price, setPrice] = useState("");
+  const [transferrable, settransferrable] = useState(true);
+ 
+
   const { account, network, signAndSubmitTransaction } = useWallet();
 
   const createEvent = async (e: any) => {
