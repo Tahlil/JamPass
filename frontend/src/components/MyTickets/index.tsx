@@ -17,13 +17,15 @@ export function MyTickets() {
 				<div className="absolute rounded-full w-8 h-8 bg-zinc-200 -bottom-5"></div>
 			</div>
 			<div className="h-full py-8 px-10 bg-zinc-900 flex-grow rounded-r-3xl flex flex-col">
+			<span className="font-bold text-xs">{event.name}</span>
+
 				<div className="flex w-full justify-between items-center">
 					<div className="flex flex-col items-center">
 						<span className="text-3xl font-bold">📍</span>
 						<span className="text-zinc-500 text-sm">{event.location}</span>
 					</div>
+
 					<div className="flex flex-col flex-grow items-center px-10">
-						<span className="font-bold text-xs">{event.price}</span>
 						<div className="w-full flex items-center mt-2">
 							<div className="w-3 h-3 rounded-full border-2 border-zinc-900"></div>
 							<div className="flex-grow border-t-2 border-zinc-400 border-dotted h-px"></div>
@@ -31,8 +33,8 @@ export function MyTickets() {
 							<div className="flex-grow border-t-2 border-zinc-400 border-dotted h-px"></div>
 							<div className="w-3 h-3 rounded-full border-2 border-zinc-900"></div>
 						</div>
-						<div className="flex items-center px-3 py-2 rounded-full bg-lime-400 h-8 mt-2">
-							<span className="text-sm text-zinc-900">{event.name}</span>
+						<div className="flex items-center px-3 py-2 rounded-full bg-lime-400">
+							<span className="text-sm text-zinc-900">{event.price}</span>
 						</div>
 					</div>
 					<div className="flex flex-col items-center">
