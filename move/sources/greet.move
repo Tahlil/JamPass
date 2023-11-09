@@ -1,6 +1,7 @@
 module MyAddr::test2 {
     use std::option;
     use std::signer;
+    use std::vector;
     use std::string::{Self, String};
     use aptos_framework::object::{Self, Object};
     use aptos_std::smart_vector::{Self, SmartVector};
@@ -210,8 +211,7 @@ module MyAddr::test2 {
         receiver: address,
         property_keys: vector<String>,
         property_types: vector<String>,
-        property_values: vector<vector<u8>>,
-        transferrable: bool
+        property_values: vector<vector<u8>>
     ) acquires EventToken {
         // Checks if the event manager is the owner of the event token.
         assert!(object::owner(event_token) != signer::address_of(customer), ENOT_CUSTOMER);
@@ -292,7 +292,7 @@ module MyAddr::test2 {
     }
 
      #[test(fx = @std, admin = @MyAddr, event_manager = @0x456, user = @0x789)]
-    public fun test_guild(fx: signer, admin: &signer, event_manager: &signer, user: address) acquires Config {
+    public fun test_guild(fx: signer, admin: &signer, event_manager: &signer, user: &signer) acquires Config, EventToken {
         use std::features;
 
         let feature = features::get_auids();
@@ -333,6 +333,20 @@ module MyAddr::test2 {
             string::utf8(b"Member Collection #1"),
             string::utf8(b"Member Collection #1 Description"),
             string::utf8(b"Member Collection #1 URI"),
+        );
+
+        let event_token_addr = event_token_address(string::utf8(b"Guild Token #1"));
+        let event_token = object::address_to_object<EventToken>(event_token_addr);
+        // Creates the member token for User.
+        buy_ticket(
+            user,
+            event_token,
+            string::utf8(b""),
+            string::utf8(b""),
+            signer::address_of(user),
+            vector::empty<String>(),
+            vector::empty<String>(),
+            vector::empty<vector<u8>>()
         );
 
     }
