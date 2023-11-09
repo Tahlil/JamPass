@@ -1,4 +1,4 @@
-module MyAddr::test1 {
+module MyAddr::test2 {
     use std::option;
     use std::signer;
     use std::string::{Self, String};
@@ -6,6 +6,7 @@ module MyAddr::test1 {
     use aptos_std::smart_vector::{Self, SmartVector};
     use aptos_token_objects::collection;
     use aptos_token_objects::token;
+     use aptos_token_objects::aptos_token;
 
     const ENOT_ADMIN: u64 = 1;
     const ENOT_OWNER: u64 = 2;
@@ -49,8 +50,7 @@ module MyAddr::test1 {
     /// Ticket token
     struct TicketToken has key {
         /// Belonging event
-        event: Object<EventToken>,
-        price:u64
+        event: Object<EventToken>
     }
 
     /// Initializes the module, creating the manager object, the event token collection and the whitelist.
@@ -202,46 +202,37 @@ module MyAddr::test1 {
     //     move_to(&object_signer, ticket_token);
     // }
 
-    // public entry fun buy_ticket(
-    //     customer: &signer,
-    //     event_token: Object<EventToken>,
-    //     description: String,
-    //     name: String,
-    //     uri: String,
-    //     receiver: address,
-    //     price: u64
-    // ) acquires EventToken {
-    //     // Checks if the event manager is the owner of the event token.
-    //     assert!(object::owner(event_token) != signer::address_of(customer), ENOT_CUSTOMER);
+    public entry fun buy_ticket(
+        customer: &signer,
+        event_token: Object<EventToken>,
+        description: String,
+        name: String,
+        receiver: address,
+        property_keys: vector<String>,
+        property_types: vector<String>,
+        property_values: vector<vector<u8>>,
+        transferrable: bool
+    ) acquires EventToken {
+        // Checks if the event manager is the owner of the event token.
+        assert!(object::owner(event_token) != signer::address_of(customer), ENOT_CUSTOMER);
 
-    //     let event = borrow_global<EventToken>(object::object_address(&event_token));
-    //     let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
-    //     // Creates the ticket token, and get the constructor ref of the token. The constructor ref
-    //     // is used to generate the refs of the token.
-    //     let constructor_ref = token::create_named_token(
-    //         &event_token_object_signer,
-    //         event.ticket_collection_name,
-    //         description,
-    //         name,
-    //         option::none(),
-    //         uri,
-    //     );
+        let event = borrow_global<EventToken>(object::object_address(&event_token));
+        let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
+        // Creates the ticket token, and get the constructor ref of the token. The constructor ref
+        // is used to generate the refs of the token.
+        aptos_token::mint_soul_bound(
+            &event_token_object_signer,
+            event.ticket_collection_name,
+            description,
+            name,
+            string::utf8(b"https://www.freeiconspng.com/thumbs/hd-tickets/ticket-background-hd-with-stars-design-15.png"),
+            property_keys,
+            property_types,
+            property_values,
+            signer::address_of(customer)
+        );
 
-    //     // Generates the object signer and the refs. The refs are used to manage the token.
-    //     let object_signer = object::generate_signer(&constructor_ref);
-    //     let transfer_ref = object::generate_transfer_ref(&constructor_ref);
-
-    //     // Transfers the token to the `soul_bound_to` address
-    //     let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
-    //     object::transfer_with_ref(linear_transfer_ref, receiver);
-
-    //     // Publishes the TicketToken resource with the refs.
-    //     let ticket_token = TicketToken {
-    //         event: event_token,
-    //         price,
-    //     };
-    //     move_to(&object_signer, ticket_token);
-    // }
+    }
 
     /// Returns the signer of the event collection manager object.
     fun event_collection_manager_signer(): signer acquires Config {
@@ -298,6 +289,52 @@ module MyAddr::test1 {
     public fun is_whitelisted(event_manager: address): bool acquires Config {
         let whitelist = &borrow_global<Config>(@MyAddr).whitelist;
         smart_vector::contains(whitelist, &event_manager)
+    }
+
+     #[test(fx = @std, admin = @MyAddr, event_manager = @0x456, user = @0x789)]
+    public fun test_guild(fx: signer, admin: &signer, event_manager: &signer, user: address) acquires Config {
+        use std::features;
+
+        let feature = features::get_auids();
+        features::change_feature_flags(&fx, vector[feature], vector[]);
+
+        // This test assumes that the creator's address is equal to @token_objects.
+        assert!(signer::address_of(admin) == @MyAddr, 0);
+
+        // -----------------------------------
+        // Admin creates the event collection.
+        // -----------------------------------
+        init_module(admin);
+
+        // ---------------------------------------------
+        // Admin adds the event manager to the whitelist.
+        // ---------------------------------------------
+        whitelist_event_manager(admin, signer::address_of(event_manager));
+
+        // ------------------------------------------
+        // event manager mints an event token.
+        // ------------------------------------------
+        mint_event(
+            event_manager,
+            string::utf8(b"Guild Token #1 Description"),
+            string::utf8(b"Guild Token #1"),
+            string::utf8(b"Guild Token #1 URI"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"11 $"),
+            false,
+            string::utf8(b"Member Collection #1"),
+            string::utf8(b"Member Collection #1 Description"),
+            string::utf8(b"Member Collection #1 URI"),
+        );
+
     }
 
 }
