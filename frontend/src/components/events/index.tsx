@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { SetStateAction, useCallback, useEffect, useState } from "react";
 import EventData from "../../data/events.json";
 import { EventDetails } from "../EventDetails";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
 
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { AptosClient } from "aptos";
+import { AptosClient, Provider, Network } from "aptos";
 
-const client = new AptosClient("https://fullnode.devnet.aptoslabs.com");
+const client = new Provider(Network.DEVNET);
 export function Events(props: { userType: string }) {
   const [allEventsSet, setAllEventsSet] = useState<Boolean>(true);
+  const [allEvents, setAllEvents] = useState(EventData);
   const [eventDetails, setEvent] = useState<Event>();
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
@@ -25,10 +26,63 @@ export function Events(props: { userType: string }) {
     setAllEventsSet(true);
   }
 
+  const fetchValue = useCallback(async () => {
+    if (!account?.address) return;
+    console.log("Fetching event...")
+    const adminResource = await client.getAccountResource(
+      NEXT_PUBLIC_CONTRACT_ADDRESS,
+      `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::Config`
+    );
+    const creatorAddress = adminResource.data.extend_ref.self + "";
+
+    console.log("Admin addresses Resources:");
+    console.log(adminResource.data.extend_ref.self);
+    let value = await client.getTokenOwnedFromCollectionNameAndCreatorAddress(
+      account?.address,
+      "Event Collection Name",
+      creatorAddress
+    );
+    let eventsFromContract: SetStateAction<({ name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; rules: string; image: string; price: string; transferrable: boolean; } | { name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; image: string; price: string; rules?: undefined; transferrable?: undefined; } | { name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; image: string; price: string; transferrable: boolean; rules?: undefined; })[]> | { name: string; datetime: any; location: any; description: string; agenda: any; speakers: any; breaks: any; registration: any; contact: any; emergency: any; image: string; price: any; transferrable: any; rules: any; }[] = []
+    console.log({ value });
+    const allTokens = value.current_token_ownerships_v2;
+    for(let i=0; i<allTokens.length ; i++){
+        const token = allTokens[i]
+        const eventDetails = await client.getAccountResources(token.storage_id);
+        eventsFromContract.push({
+            name: token.current_token_data?.token_name+"",
+            datetime: eventDetails[2].data.datetime,
+            location: eventDetails[2].data.location,
+            description: token.current_token_data?.description+"",
+            agenda: eventDetails[2].data.agenda,
+            speakers: eventDetails[2].data.speakers,
+            breaks: eventDetails[2].data.breaks,
+            registration: eventDetails[2].data.registration,
+            contact: eventDetails[2].data.contact,
+            emergency: eventDetails[2].data.emergency,
+            image: token.current_token_data?.token_uri+"",
+            price: eventDetails[2].data.price,
+            transferrable: eventDetails[2].data.transferrable,
+            rules: eventDetails[2].data.rules
+        });
+    }
+  
+    console.log("setting all events:")
+    console.log({allEvents})
+    console.log(eventsFromContract)
+    setAllEvents((prev) => [...EventData, ...eventsFromContract])
+    console.log({allEvents})
+  }, [account?.address]);
+
+  useEffect(() => {
+    if (!account?.address || !network) return;
+
+    fetchValue();
+  }, [account?.address, fetchValue, network]);
+
   const buyTicket = async (e: any) => {
     e.preventDefault();
     if (!account?.address) return;
-    console.log("buying ticket...")
+    console.log("buying ticket...");
     setTransactionInProgress(true);
     const payload = {
       type: "entry_function_payload",
@@ -49,7 +103,19 @@ export function Events(props: { userType: string }) {
       const response = await signAndSubmitTransaction(payload);
       console.log({ response });
 
-      toast(<span>Tx successful! <a href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`} target="_blank" className='underline p-1'> TX Link </a></span>)
+      toast(
+        <span>
+          Tx successful!{" "}
+          <a
+            href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`}
+            target="_blank"
+            className="underline p-1"
+          >
+            {" "}
+            TX Link{" "}
+          </a>
+        </span>
+      );
       // wait for transaction
       await client.waitForTransaction(response.hash);
     } catch (error) {
@@ -65,14 +131,14 @@ export function Events(props: { userType: string }) {
       {allEventsSet ? (
         <>
           <div className="flex items-center bg-indigo-100">
-            <ToastContainer/>
+            <ToastContainer />
             <div className="container ml-auto mr-auto flex flex-wrap items-start">
               <div className="w-full pl-5 lg:pl-2 mb-4 mt-4">
                 <h1 className="text-3xl lg:text-4xl text-gray-700 font-extrabold">
                   All Events
                 </h1>
               </div>
-              {EventData.map((event) => (
+              {allEvents.map((event) => (
                 <div
                   className="w-full md:w-1/2 lg:w-1/4 pl-5 pr-5 mb-5 lg:pl-2 lg:pr-2"
                   onClick={() => goToEventDetails(event)}
@@ -141,8 +207,8 @@ export function Events(props: { userType: string }) {
                   type="button"
                   className="nes-btn is-primary"
                   onClick={() => {
-                    document.getElementById('dialog-rounded').showModal();
-                }}
+                    document.getElementById("dialog-rounded").showModal();
+                  }}
                 >
                   Buy Ticket 🎫
                 </button>

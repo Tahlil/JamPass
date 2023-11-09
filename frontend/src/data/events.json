@@ -12,9 +12,8 @@
         "emergency": "In case of emergency, please follow the exit signs to the nearest exit. Event staff will assist you.",
         "rules": "Please adhere to the event's code of conduct and show respect to all participants.",
         "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
-        "price": "$50.00",
-        "transferrable": false,
-        "availableTickets": 100
+        "price": "50.00 $",
+        "transferrable": false
     },
     {
         "name": "ArtExpo 2023",
@@ -28,8 +27,7 @@
         "contact": "Email: info@artexpo.com, Phone: +1 (987) 654-3210",
         "emergency": "Emergency exits are marked with illuminated signs throughout the gallery.",
         "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
-        "price": "$30.00",
-        "availableTickets": 300
+        "price": "30.00 $"
     },
     {
         "name": "GreenTech Summit 2023",
@@ -43,9 +41,8 @@
         "contact": "Email: info@greentechsummit.com, Phone: +1 (555) 123-4567",
         "emergency": "Please follow the event staff's instructions in case of an emergency.",
         "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
-        "price": "$80.00",
-        "transferrable": false,
-        "availableTickets": 250
+        "price": "80.00 $",
+        "transferrable": false
     },
     {
         "name": "Community Meeting: Future Projects",
@@ -59,9 +56,8 @@
         "contact": "Email: info@cityhallmeeting.com, Phone: +1 (555) 789-0123",
         "emergency": "In case of emergency, follow the exit signs and gather in the designated assembly area.",
         "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
-        "price": "$10.00",
-        "transferrable": false,
-        "availableTickets": 100
+        "price": "10.00 $",
+        "transferrable": false
     },
     {
         "name": "Health and Wellness Fair 2024",
@@ -76,8 +72,7 @@
         "emergency": "Please remain calm and follow community center staff instructions in case of an emergency.",
         "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
         "price": "$20.00",
-        "transferrable": false,
-        "availableTickets": 150
+        "transferrable": false
     },
     {
         "name": "Education Symposium 2024",
@@ -91,9 +86,8 @@
         "contact": "Email: info@educationsymposium.com, Phone: +1 (555) 987-3210",
         "emergency": "Please follow university staff's instructions in case of an emergency.",
         "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
-        "price": "$40.00",
-        "transferrable": false,
-        "availableTickets": 101
+        "price": "40.00 $",
+        "transferrable": false
     },
     {
         "name": "Music Festival 2024",
@@ -107,8 +101,7 @@
         "contact": "Email: info@musicfestival2024.com, Phone: +1 (555) 123-9876",
         "emergency": "In case of emergency, follow staff instructions and locate the designated emergency meeting point.",
         "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4",
-        "price": "$60.00",
-        "transferrable": false,
-        "availableTickets": 200
+        "price": "60.00 $",
+        "transferrable": false
     }
 ]
