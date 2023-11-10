@@ -205,7 +205,7 @@ module MyAddr::test1 {
 
     public entry fun buy_ticket(
         customer: &signer,
-        event_token: Object<EventToken>,
+        event_token_addr: address,
         description: String,
         name: String,
         property_keys: vector<String>,
@@ -213,6 +213,7 @@ module MyAddr::test1 {
         property_values: vector<vector<u8>>
     ) acquires EventToken {
         // Checks if the event manager is the owner of the event token.
+        let event_token = object::address_to_object<EventToken>(event_token_addr);
         assert!(object::owner(event_token) != signer::address_of(customer), ENOT_CUSTOMER);
 
         let event = borrow_global<EventToken>(object::object_address(&event_token));

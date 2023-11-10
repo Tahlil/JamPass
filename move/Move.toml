@@ -5,7 +5,7 @@ upgrade_policy = "compatible"
 
 # value of MyAddr should be the same as .aptos/config.yaml file "account" value
 [addresses]
-MyAddr='819097522ec8cae40cf4d613cff343ea74b3cf4e11b807966ad443fbe43c9f30'
+MyAddr='aeb489f1b55ebb7b00926879ea2dceaf7bac94556649b83e1dd1a2bf41c017c8'
 Std = "0x1"
 aptos_std = "0x1"
 aptos_framework = "0x1"

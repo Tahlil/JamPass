@@ -88,41 +88,49 @@ export function Events(props: { userType: string }) {
     e.preventDefault();
     if (!account?.address) return;
     console.log("buying ticket...");
-    setTransactionInProgress(true);
     const payload = {
-      type: "entry_function_payload",
-      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::mint_event`,
-      type_arguments: [],
-      arguments: [
-        "Test9 Description",
-        "Test9 name",
-        "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
-        "ticket9_collection",
-        "ticket9_collection_description",
-        "https://cdn.pixabay.com/photo/2018/03/19/00/40/entries-3238747_1280.png",
-      ],
+        function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::event_token_address`,
+        type_arguments: [],
+        arguments: ["TestName"],
     };
+    const resources = await client.view(payload);
+    console.log(resources[0])
+    // Returns the cleaned data in a standard, diges
+    // setTransactionInProgress(true);
+    // const payload = {
+    //   type: "entry_function_payload",
+    //   function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::buy_ticket`,
+    //   type_arguments: [],
+    //   arguments: [
+    //     "Test9 Description",
+    //     "Test9 name",
+    //     "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
+    //     "ticket9_collection",
+    //     "ticket9_collection_description",
+    //     "https://cdn.pixabay.com/photo/2018/03/19/00/40/entries-3238747_1280.png",
+    //   ],
+    // };
 
     try {
-      // sign and submit transaction to chain
-      const response = await signAndSubmitTransaction(payload);
-      console.log({ response });
+    //   // sign and submit transaction to chain
+    //   const response = await signAndSubmitTransaction(payload);
+    //   console.log({ response });
 
-      toast(
-        <span>
-          Tx successful!{" "}
-          <a
-            href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`}
-            target="_blank"
-            className="underline p-1"
-          >
-            {" "}
-            TX Link{" "}
-          </a>
-        </span>
-      );
-      // wait for transaction
-      await client.waitForTransaction(response.hash);
+    //   toast(
+    //     <span>
+    //       Tx successful!{" "}
+    //       <a
+    //         href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`}
+    //         target="_blank"
+    //         className="underline p-1"
+    //       >
+    //         {" "}
+    //         TX Link{" "}
+    //       </a>
+    //     </span>
+    //   );
+    //   // wait for transaction
+    //   await client.waitForTransaction(response.hash);
     } catch (error) {
       console.log("error", error);
       console.log({ error });
@@ -224,8 +232,8 @@ export function Events(props: { userType: string }) {
                     <menu className="dialog-menu p-3">
                       <button className="nes-btn m-2">Cancel</button>
                       <button
-                        onClick={() => {
-                          gotoEvent();
+                        onClick={(e) => {
+                            buyTicket(e);
                         }}
                         className="nes-btn is-primary"
                       >
