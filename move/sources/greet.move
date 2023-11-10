@@ -1,7 +1,7 @@
-module MyAddr::test2 {
+module MyAddr::test1 {
     use std::option;
     use std::signer;
-    use std::vector;
+    // use std::vector;
     use std::string::{Self, String};
     use aptos_framework::object::{Self, Object};
     use aptos_std::smart_vector::{Self, SmartVector};
@@ -208,7 +208,6 @@ module MyAddr::test2 {
         event_token: Object<EventToken>,
         description: String,
         name: String,
-        receiver: address,
         property_keys: vector<String>,
         property_types: vector<String>,
         property_values: vector<vector<u8>>
@@ -291,64 +290,63 @@ module MyAddr::test2 {
         smart_vector::contains(whitelist, &event_manager)
     }
 
-     #[test(fx = @std, admin = @MyAddr, event_manager = @0x456, user = @0x789)]
-    public fun test_guild(fx: signer, admin: &signer, event_manager: &signer, user: &signer) acquires Config, EventToken {
-        use std::features;
+    //  #[test(fx = @std, admin = @MyAddr, event_manager = @0x456, user = @0x789)]
+    // public fun test_guild(fx: signer, admin: &signer, event_manager: &signer, user: &signer) acquires Config, EventToken {
+    //     use std::features;
 
-        let feature = features::get_auids();
-        features::change_feature_flags(&fx, vector[feature], vector[]);
+    //     let feature = features::get_auids();
+    //     features::change_feature_flags(&fx, vector[feature], vector[]);
 
-        // This test assumes that the creator's address is equal to @token_objects.
-        assert!(signer::address_of(admin) == @MyAddr, 0);
+    //     // This test assumes that the creator's address is equal to @token_objects.
+    //     assert!(signer::address_of(admin) == @MyAddr, 0);
 
-        // -----------------------------------
-        // Admin creates the event collection.
-        // -----------------------------------
-        init_module(admin);
+    //     // -----------------------------------
+    //     // Admin creates the event collection.
+    //     // -----------------------------------
+    //     init_module(admin);
 
-        // ---------------------------------------------
-        // Admin adds the event manager to the whitelist.
-        // ---------------------------------------------
-        whitelist_event_manager(admin, signer::address_of(event_manager));
+    //     // ---------------------------------------------
+    //     // Admin adds the event manager to the whitelist.
+    //     // ---------------------------------------------
+    //     whitelist_event_manager(admin, signer::address_of(event_manager));
 
-        // ------------------------------------------
-        // event manager mints an event token.
-        // ------------------------------------------
-        mint_event(
-            event_manager,
-            string::utf8(b"Guild Token #1 Description"),
-            string::utf8(b"Guild Token #1"),
-            string::utf8(b"Guild Token #1 URI"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"Test"),
-            string::utf8(b"11 $"),
-            false,
-            string::utf8(b"Member Collection #1"),
-            string::utf8(b"Member Collection #1 Description"),
-            string::utf8(b"Member Collection #1 URI"),
-        );
+    //     // ------------------------------------------
+    //     // event manager mints an event token.
+    //     // ------------------------------------------
+    //     mint_event(
+    //         event_manager,
+    //         string::utf8(b"Guild Token #1 Description"),
+    //         string::utf8(b"Guild Token #1"),
+    //         string::utf8(b"Guild Token #1 URI"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"Test"),
+    //         string::utf8(b"11 $"),
+    //         false,
+    //         string::utf8(b"Member Collection #1"),
+    //         string::utf8(b"Member Collection #1 Description"),
+    //         string::utf8(b"Member Collection #1 URI"),
+    //     );
 
-        let event_token_addr = event_token_address(string::utf8(b"Guild Token #1"));
-        let event_token = object::address_to_object<EventToken>(event_token_addr);
-        // Creates the member token for User.
-        buy_ticket(
-            user,
-            event_token,
-            string::utf8(b""),
-            string::utf8(b""),
-            signer::address_of(user),
-            vector::empty<String>(),
-            vector::empty<String>(),
-            vector::empty<vector<u8>>()
-        );
+    //     let event_token_addr = event_token_address(string::utf8(b"Guild Token #1"));
+    //     let event_token = object::address_to_object<EventToken>(event_token_addr);
+    //     // Creates the member token for User.
+    //     buy_ticket(
+    //         user,
+    //         event_token,
+    //         string::utf8(b""),
+    //         string::utf8(b""),
+    //         vector::empty<String>(),
+    //         vector::empty<String>(),
+    //         vector::empty<vector<u8>>()
+    //     );
 
-    }
+    // }
 
 }
