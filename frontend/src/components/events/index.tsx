@@ -26,49 +26,57 @@ export function Events(props: { userType: string }) {
     setAllEventsSet(true);
   }
 
+//   description: String,
+//         name: String,
+//         property_keys: vector<String>,
+//         property_types: vector<String>,
+//         property_values: vector<vector<u8>>
+
   const fetchValue = useCallback(async () => {
     if (!account?.address) return;
     console.log("Fetching event...")
     const adminResource = await client.getAccountResource(
       NEXT_PUBLIC_CONTRACT_ADDRESS,
-      `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::Config`
+      `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::Config`
     );
     const creatorAddress = adminResource.data.extend_ref.self + "";
 
     console.log("Admin addresses Resources:");
     console.log(adminResource.data.whitelist.inline_vec[0])
     console.log(adminResource.data.extend_ref.self);
+    console.log({creatorAddress})
+    console.log(adminResource.data.whitelist.inline_vec[0])
     let value = await client.getTokenOwnedFromCollectionNameAndCreatorAddress(
       adminResource.data.whitelist.inline_vec[0], // TODO: list all event manager events
       "Event Collection Name",
-      creatorAddress
+      "0xcf38ea88413aa71e5aefcf4396bc0b17693809d013a4a66bdb7d2bfc822aa30"
     );
     let eventsFromContract: SetStateAction<({ name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; rules: string; image: string; price: string; transferrable: boolean; } | { name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; image: string; price: string; rules?: undefined; transferrable?: undefined; } | { name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; image: string; price: string; transferrable: boolean; rules?: undefined; })[]> | { name: string; datetime: any; location: any; description: string; agenda: any; speakers: any; breaks: any; registration: any; contact: any; emergency: any; image: string; price: any; transferrable: any; rules: any; }[] = []
     console.log({ value });
     const allTokens = value.current_token_ownerships_v2;
     for(let i=0; i<allTokens.length ; i++){
         const token = allTokens[i]
-        const eventDetails = await client.getAccountResource(token.storage_id,
-            `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::EventToken`
+        const eventDetailsFromContract = await client.getAccountResource(token.storage_id,
+            `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::EventToken`
             );
-        console.log({eventDetails});
-        console.log(eventDetails.data);
+        console.log({eventDetailsFromContract});
+        console.log(eventDetailsFromContract.data);
         
         eventsFromContract.push({
             name: token.current_token_data?.token_name+"",
-            datetime: eventDetails.data.datetime,
-            location: eventDetails.data.location,
+            datetime: eventDetailsFromContract.data.datetime,
+            location: eventDetailsFromContract.data.location,
             description: token.current_token_data?.description+"",
-            agenda: eventDetails.data.agenda,
-            speakers: eventDetails.data.speakers,
-            breaks: eventDetails.data.breaks,
-            registration: eventDetails.data.registration,
-            contact: eventDetails.data.contact,
-            emergency: eventDetails.data.emergency,
+            agenda: eventDetailsFromContract.data.agenda,
+            speakers: eventDetailsFromContract.data.speakers,
+            breaks: eventDetailsFromContract.data.breaks,
+            registration: eventDetailsFromContract.data.registration,
+            contact: eventDetailsFromContract.data.contact,
+            emergency: eventDetailsFromContract.data.emergency,
             image: token.current_token_data?.token_uri+"",
-            price: eventDetails.data.price,
-            transferrable: eventDetails.data.transferrable,
-            rules: eventDetails.data.rules
+            price: eventDetailsFromContract.data.price,
+            transferrable: eventDetailsFromContract.data.transferrable,
+            rules: eventDetailsFromContract.data.rules
         });
     }
   
@@ -89,49 +97,80 @@ export function Events(props: { userType: string }) {
     e.preventDefault();
     if (!account?.address) return;
     console.log("buying ticket...");
-    const payload = {
-        function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::event_token_address`,
+    console.log({eventDetails})
+    let payload = {
+        function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::event_token_address`,
         type_arguments: [],
-        arguments: ["TestName"],
+        arguments: [eventDetails?.name],
     };
     const resources = await client.view(payload);
     console.log(resources[0])
-    // Returns the cleaned data in a standard, diges
-    // setTransactionInProgress(true);
-    // const payload = {
-    //   type: "entry_function_payload",
-    //   function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::buy_ticket`,
-    //   type_arguments: [],
-    //   arguments: [
-    //     "Test9 Description",
-    //     "Test9 name",
-    //     "https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_640.jpg",
-    //     "ticket9_collection",
-    //     "ticket9_collection_description",
-    //     "https://cdn.pixabay.com/photo/2018/03/19/00/40/entries-3238747_1280.png",
-    //   ],
-    // };
+    // const adminResource = await client.getAccountResource(
+    //     NEXT_PUBLIC_CONTRACT_ADDRESS,
+    //     `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::Config`
+    //   );
+    // const creatorAddress = adminResource.data.extend_ref.self + "";
+    
+    // let value = await client.getTokenOwnedFromCollectionNameAndCreatorAddress(
+    //     adminResource.data.whitelist.inline_vec[0], // TODO: list all event manager events
+    //     "Event Collection Name",
+    //     creatorAddress
+    //   );
+    // console.log({value})
+
+
+    // Returns the cleaned data in a standard,
+    setTransactionInProgress(true);
+
+    const collectionPayload = {
+        type: "entry_function_payload",
+        function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::buy_ticket_collection_customer`,
+        type_arguments: [],
+        arguments: [
+          eventDetails?.name,
+          eventDetails?.description
+        ],
+      };
+
+    const mintPayload = {
+      type: "entry_function_payload",
+      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::buy_ticket_customer`,
+      type_arguments: [],
+      arguments: [
+        eventDetails?.name,
+        eventDetails?.description,
+        [],
+        [],
+        [[]]
+      ],
+    };
+
 
     try {
-    //   // sign and submit transaction to chain
-    //   const response = await signAndSubmitTransaction(payload);
-    //   console.log({ response });
+      const response1 = await signAndSubmitTransaction(collectionPayload);
+      // sign and submit transaction to chain
+    //   console.log({ response1 });
+    //   await client.waitForTransaction(response1.hash);
 
-    //   toast(
-    //     <span>
-    //       Tx successful!{" "}
-    //       <a
-    //         href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`}
-    //         target="_blank"
-    //         className="underline p-1"
-    //       >
-    //         {" "}
-    //         TX Link{" "}
-    //       </a>
-    //     </span>
-    //   );
-    //   // wait for transaction
-    //   await client.waitForTransaction(response.hash);
+      const response2 = await signAndSubmitTransaction(mintPayload);
+      console.log({ response2 });
+      await client.waitForTransaction(response2.hash);
+
+      toast(
+        <span>
+          Tx successful!{" "}
+          <a
+            href={`https://explorer.aptoslabs.com/txn/${response2.version}?network=devnet`}
+            target="_blank"
+            className="underline p-1"
+          >
+            {" "}
+            TX Link{" "}
+          </a>
+        </span>
+      );
+      // wait for transaction
+      
     } catch (error) {
       console.log("error", error);
       console.log({ error });

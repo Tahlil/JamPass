@@ -27,7 +27,7 @@ export function Connected(props: { element: "home" | "event" | "ticket" | "creat
     console.log({ address });
     const payload = {
       type: "entry_function_payload",
-      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::whitelist_event_manager`,
+      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::whitelist_event_manager`,
       type_arguments: [],
       arguments: [address],
     };
