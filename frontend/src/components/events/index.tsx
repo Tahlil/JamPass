@@ -36,9 +36,10 @@ export function Events(props: { userType: string }) {
     const creatorAddress = adminResource.data.extend_ref.self + "";
 
     console.log("Admin addresses Resources:");
+    console.log(adminResource.data.whitelist.inline_vec[0])
     console.log(adminResource.data.extend_ref.self);
     let value = await client.getTokenOwnedFromCollectionNameAndCreatorAddress(
-      account?.address,
+      adminResource.data.whitelist.inline_vec[0], // TODO: list all event manager events
       "Event Collection Name",
       creatorAddress
     );
