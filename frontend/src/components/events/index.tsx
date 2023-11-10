@@ -47,22 +47,27 @@ export function Events(props: { userType: string }) {
     const allTokens = value.current_token_ownerships_v2;
     for(let i=0; i<allTokens.length ; i++){
         const token = allTokens[i]
-        const eventDetails = await client.getAccountResources(token.storage_id);
+        const eventDetails = await client.getAccountResource(token.storage_id,
+            `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test1::EventToken`
+            );
+        console.log({eventDetails});
+        console.log(eventDetails.data);
+        
         eventsFromContract.push({
             name: token.current_token_data?.token_name+"",
-            datetime: eventDetails[2].data.datetime,
-            location: eventDetails[2].data.location,
+            datetime: eventDetails.data.datetime,
+            location: eventDetails.data.location,
             description: token.current_token_data?.description+"",
-            agenda: eventDetails[2].data.agenda,
-            speakers: eventDetails[2].data.speakers,
-            breaks: eventDetails[2].data.breaks,
-            registration: eventDetails[2].data.registration,
-            contact: eventDetails[2].data.contact,
-            emergency: eventDetails[2].data.emergency,
+            agenda: eventDetails.data.agenda,
+            speakers: eventDetails.data.speakers,
+            breaks: eventDetails.data.breaks,
+            registration: eventDetails.data.registration,
+            contact: eventDetails.data.contact,
+            emergency: eventDetails.data.emergency,
             image: token.current_token_data?.token_uri+"",
-            price: eventDetails[2].data.price,
-            transferrable: eventDetails[2].data.transferrable,
-            rules: eventDetails[2].data.rules
+            price: eventDetails.data.price,
+            transferrable: eventDetails.data.transferrable,
+            rules: eventDetails.data.rules
         });
     }
   
