@@ -2,14 +2,12 @@ module MyAddr::test {
     use std::option;
     use std::signer;
 
- 
-
     use std::string::{Self, String};
     use aptos_framework::object::{Self, Object};
     use aptos_std::smart_vector::{Self, SmartVector};
     use aptos_token_objects::collection;
     use aptos_token_objects::token;
-    use aptos_token_objects::aptos_token;
+    // use aptos_token_objects::aptos_token;
      
 
     const ENOT_ADMIN: u64 = 1;
@@ -54,7 +52,8 @@ module MyAddr::test {
     /// Ticket token
     struct TicketToken has key {
         /// Belonging event
-        event: Object<EventToken>
+        event: Object<EventToken>,
+        price: u64
     }
 
     /// Initializes the module, creating the manager object, the event token collection and the whitelist.
@@ -132,7 +131,7 @@ module MyAddr::test {
         );
 
         // Generates the object signer and the refs. The refs are used to manage the token.
-        let object_signer = object::generate_signer(&constructor_ref);
+        let _object_signer = object::generate_signer(&constructor_ref);
         let extend_ref = object::generate_extend_ref(&constructor_ref);
 
         // Transfers the token to the guild master.
@@ -157,10 +156,10 @@ module MyAddr::test {
             price,
             transferrable
         };
-        move_to(&object_signer, event_token);
+        move_to(&_object_signer, event_token);
 
         // Creates a ticket collection which is associated to the event token.
-        create_ticket_collection(&object_signer, ticket_collection_name, ticket_collection_description, ticket_collection_uri);
+        create_ticket_collection(&_object_signer, ticket_collection_name, ticket_collection_description, ticket_collection_uri);
     }
 
     /// Mints a ticket token. This function mints a new ticket token and transfers it to the
@@ -191,7 +190,7 @@ module MyAddr::test {
         );
 
         // Generates the object signer and the refs. The refs are used to manage the token.
-        let object_signer = object::generate_signer(&constructor_ref);
+        let _object_signer = object::generate_signer(&constructor_ref);
         let transfer_ref = object::generate_transfer_ref(&constructor_ref);
 
         // Transfers the token to the `soul_bound_to` address
@@ -203,7 +202,7 @@ module MyAddr::test {
             event: event_token,
             price,
         };
-        move_to(&object_signer, ticket_token);
+        move_to(&_object_signer, ticket_token);
     }
 
     public entry fun buy_ticket_collection_customer(
@@ -222,40 +221,41 @@ module MyAddr::test {
 
     public entry fun buy_ticket_customer(
         customer: &signer,
+        event_name: String,
         description: String,
         name: String,
-        property_keys: vector<String>,
-        property_types: vector<String>,
-        property_values: vector<vector<u8>>
-    ) {
-        //  collection::create_unlimited_collection(
-        //     customer,
-        //     description,
-        //     name,
-        //     option::none(),
-        //     string::utf8(b"https://www.freeiconspng.com/thumbs/hd-tickets/ticket-background-hd-with-stars-design-15.png")
-        // );
-        
+        uri: String,
+        price: u64
+    ) acquires Config, EventToken {
+        let event_token_addr = event_token_address(event_name);
+        let event_token = object::address_to_object<EventToken>(event_token_addr);
+        let event = borrow_global<EventToken>(object::object_address(&event_token));
+        let event_token_object_signer = object::generate_signer_for_extending(&event.extend_ref);
+        // Creates the ticket token, and get the constructor ref of the token. The constructor ref
+        // is used to generate the refs of the token.
         let constructor_ref = token::create_named_token(
-            customer,
-            name,
+            &event_token_object_signer,
+            event.ticket_collection_name,
             description,
             name,
             option::none(),
-            string::utf8(b"https://www.freeiconspng.com/thumbs/hd-tickets/ticket-background-hd-with-stars-design-15.png"),
+            uri,
         );
 
-        let object_signer = object::generate_signer(&constructor_ref);
+        // Generates the object signer and the refs. The refs are used to manage the token.
+        let _object_signer = object::generate_signer(&constructor_ref);
         let transfer_ref = object::generate_transfer_ref(&constructor_ref);
-        let mutator_ref = token::generate_mutator_ref(&constructor_ref);
 
-        // Transfers the token to the `reciver_addr` address
+        // Transfers the token to the `soul_bound_to` address
         let linear_transfer_ref = object::generate_linear_transfer_ref(&transfer_ref);
         object::transfer_with_ref(linear_transfer_ref, signer::address_of(customer));
 
-        // Disables ungated transfer, thus making the token soulbound and non-transferable
-        object::disable_ungated_transfer(&transfer_ref);
-
+        // Publishes the TicketToken resource with the refs.
+        let ticket_token = TicketToken {
+            event: event_token,
+            price,
+        };
+        move_to(&_object_signer, ticket_token);
     }
 
     /// Returns the signer of the event collection manager object.
@@ -315,11 +315,11 @@ module MyAddr::test {
         smart_vector::contains(whitelist, &event_manager)
     }
 
-     #[test(fx = @std, admin = @MyAddr, event_manager = @0x456  , user = @0x789
+     #[test(fx = @std, admin = @MyAddr, event_manager = @0x456  , _user = @0x789
      )]
-    public fun test_guild(fx: signer, admin: &signer, event_manager: &signer, user: &signer) acquires Config {
+    public fun test_guild(fx: signer, admin: &signer, event_manager: &signer, _user: &signer) acquires Config, EventToken {
         use std::features;
-        use std::vector;
+        // use std::vector;
         use std::debug;
 
         let feature = features::get_auids();
@@ -364,19 +364,27 @@ module MyAddr::test {
         // debug::print_stack_trace();
         // let f = string::utf8(b"Member Collection #1 Description");
         // debug::print(&f);
-        // debug::print(&user);
-
-        // let event_token_addr = event_token_address(string::utf8(b"Guild Token #1"));
-        // let event_token = object::address_to_object<EventToken>(event_token_addr);
-        // Creates the member token for User.
+        debug::print(&std::string::utf8(b"okay now THIS is podracing."));
+        
+        
         buy_ticket_customer(
-            user,
-            string::utf8(b"fff"),
-            string::utf8(b"fff"),
-            vector::empty<String>(),
-            vector::empty<String>(),
-            vector::empty<vector<u8>>()
+            _user,
+            string::utf8(b"Guild Token #1"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            string::utf8(b"Test"),
+            11
         );
+        
+        // Creates the member token for User.
+        // buy_ticket_customer(
+        //     user,
+        //     string::utf8(b"fff"),
+        //     string::utf8(b"fff")
+        //     // vector::empty<String>(),
+        //     // vector::empty<String>(),
+        //     // vector::empty<vector<u8>>()
+        // );
 
     }
 
