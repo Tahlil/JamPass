@@ -47,6 +47,9 @@ export function MyTickets() {
             elm.current_token_data?.token_name + "",
             elm.storage_id
           );
+		if (ticket.current_token_ownerships_v2.length === 0) {
+			continue;
+		}
         const eventDetailsFromContract = await client.getAccountResource(
           elm.storage_id,
           `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::EventToken`
@@ -71,7 +74,7 @@ export function MyTickets() {
         });
        
       } catch (error) {
-		
+
 	  }
     }
 	setAllEvents((prev) => [...events, ...tickets])
