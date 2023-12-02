@@ -98,13 +98,13 @@ export function Events(props: { userType: string }) {
     if (!account?.address) return;
     console.log("buying ticket...");
     console.log({eventDetails})
-    let payload = {
-        function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::event_token_address`,
-        type_arguments: [],
-        arguments: [eventDetails?.name],
-    };
-    const resources = await client.view(payload);
-    console.log(resources[0])
+    // let payload = {
+    //     function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::event_token_address`,
+    //     type_arguments: [],
+    //     arguments: [eventDetails?.name],
+    // };
+    // const resources = await client.view(payload);
+    // console.log(resources[0])
     // const adminResource = await client.getAccountResource(
     //     NEXT_PUBLIC_CONTRACT_ADDRESS,
     //     `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::Config`
@@ -120,47 +120,56 @@ export function Events(props: { userType: string }) {
 
 
     // Returns the cleaned data in a standard,
-    setTransactionInProgress(true);
-
+    // setTransactionInProgress(true);
+    const eventName = eventDetails?.name,
+    ticketDescription = "ticket desc",
+    ticketName = "ticket",
+    ticketURI = eventDetails?.image,
+    price = parseInt((eventDetails?.price).split(" ")[0]);
+    console.log({eventName, ticketDescription, ticketName, ticketURI, price});
+    
     const collectionPayload = {
         type: "entry_function_payload",
-        function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::buy_ticket_collection_customer`,
+        function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::buy_ticket_customer`,
         type_arguments: [],
         arguments: [
-          eventDetails?.name,
-          eventDetails?.description
+          eventName,
+          ticketDescription,
+          ticketName,
+          ticketURI,
+          price
         ],
       };
 
-    const mintPayload = {
-      type: "entry_function_payload",
-      function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::buy_ticket_customer`,
-      type_arguments: [],
-      arguments: [
-        eventDetails?.name,
-        eventDetails?.description,
-        [],
-        [],
-        [[]]
-      ],
-    };
+    // const mintPayload = {
+    //   type: "entry_function_payload",
+    //   function: `${NEXT_PUBLIC_CONTRACT_ADDRESS}::test::buy_ticket_customer`,
+    //   type_arguments: [],
+    //   arguments: [
+    //     eventDetails?.name,
+    //     eventDetails?.description,
+    //     [],
+    //     [],
+    //     [[]]
+    //   ],
+    // };
 
 
     try {
-      const response1 = await signAndSubmitTransaction(collectionPayload);
+      // const response1 = await signAndSubmitTransaction(collectionPayload);
       // sign and submit transaction to chain
     //   console.log({ response1 });
     //   await client.waitForTransaction(response1.hash);
 
-      const response2 = await signAndSubmitTransaction(mintPayload);
-      console.log({ response2 });
-      await client.waitForTransaction(response2.hash);
+      const response = await signAndSubmitTransaction(collectionPayload);
+      console.log({ response });
+      await client.waitForTransaction(response.hash);
 
       toast(
         <span>
           Tx successful!{" "}
           <a
-            href={`https://explorer.aptoslabs.com/txn/${response2.version}?network=devnet`}
+            href={`https://explorer.aptoslabs.com/txn/${response.version}?network=devnet`}
             target="_blank"
             className="underline p-1"
           >
