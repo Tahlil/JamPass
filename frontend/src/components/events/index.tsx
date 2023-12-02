@@ -2,6 +2,7 @@ import { SetStateAction, useCallback, useEffect, useState } from "react";
 import EventData from "../../data/events.json";
 import { EventDetails } from "../EventDetails";
 import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from 'next/navigation'
 
 import { NEXT_PUBLIC_CONTRACT_ADDRESS } from "@/utils/env";
 
@@ -16,6 +17,7 @@ export function Events(props: { userType: string }) {
   const [transactionInProgress, setTransactionInProgress] =
     useState<boolean>(false);
   const { account, network, signAndSubmitTransaction } = useWallet();
+  const router = useRouter()
 
   function goToEventDetails(event: any) {
     setEvent(event);
@@ -185,6 +187,7 @@ export function Events(props: { userType: string }) {
       console.log({ error });
     } finally {
       setTransactionInProgress(false);
+      router.push('/events')
     }
   };
 
