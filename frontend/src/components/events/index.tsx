@@ -49,7 +49,7 @@ export function Events(props: { userType: string }) {
     let value = await client.getTokenOwnedFromCollectionNameAndCreatorAddress(
       adminResource.data.whitelist.inline_vec[0], // TODO: list all event manager events
       "Event Collection Name",
-      "0xcf38ea88413aa71e5aefcf4396bc0b17693809d013a4a66bdb7d2bfc822aa30"
+      creatorAddress
     );
     let eventsFromContract: SetStateAction<({ name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; rules: string; image: string; price: string; transferrable: boolean; } | { name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; image: string; price: string; rules?: undefined; transferrable?: undefined; } | { name: string; datetime: string; location: string; description: string; agenda: string; speakers: string; breaks: string; registration: string; contact: string; emergency: string; image: string; price: string; transferrable: boolean; rules?: undefined; })[]> | { name: string; datetime: any; location: any; description: string; agenda: any; speakers: any; breaks: any; registration: any; contact: any; emergency: any; image: string; price: any; transferrable: any; rules: any; }[] = []
     console.log({ value });
